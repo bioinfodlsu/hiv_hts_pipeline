@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[1]:
+# In[ ]:
 
 
 from __future__ import print_function
@@ -13,7 +13,7 @@ import subprocess
 import os
 
 
-# In[137]:
+# In[ ]:
 
 
 aminoAcids ={   
@@ -105,7 +105,7 @@ aminoAcids ={
 }
 
 
-# In[138]:
+# In[ ]:
 
 
 def getCharacter(position):
@@ -119,7 +119,7 @@ def getCharacter(position):
         
 
 
-# In[139]:
+# In[ ]:
 
 
 def getCodon(start,position,alt):
@@ -147,7 +147,7 @@ def getCodon(start,position,alt):
     return codon   
 
 
-# In[140]:
+# In[ ]:
 
 
 def getSequence(start,end):
@@ -172,7 +172,7 @@ def getSequence(start,end):
     return sequence
 
 
-# In[141]:
+# In[ ]:
 
 
 def getGeneRegions():  
@@ -200,7 +200,7 @@ def getGeneRegions():
   
 
 
-# In[142]:
+# In[ ]:
 
 
 def getAminoAcids(inputF,outputF):
@@ -223,7 +223,7 @@ def getAminoAcids(inputF,outputF):
     return translation
 
 
-# In[143]:
+# In[ ]:
 
 
 def getCombinations(base1,  base2, base3,reference):
@@ -246,7 +246,7 @@ def getCombinations(base1,  base2, base3,reference):
     return mutations        
 
 
-# In[144]:
+# In[ ]:
 
 
 def getMutations_mult(mut,refG): 
@@ -278,7 +278,7 @@ def getMutations_mult(mut,refG):
 
 
 
-# In[145]:
+# In[ ]:
 
 
 def insertVariants_mult(vcfFile,pFileName, rtFileName, iFileName): 
@@ -335,7 +335,7 @@ def insertVariants_mult(vcfFile,pFileName, rtFileName, iFileName):
     return protease_seq, rt_seq, i_seq
 
 
-# In[162]:
+# In[ ]:
 
 
 def createHIVDBRequest(prot,rt,integrase, out):
@@ -372,14 +372,14 @@ def createHIVDBRequest(prot,rt,integrase, out):
     print (subprocess.check_output(cmd, shell=True))
 
 
-# In[167]:
+# In[ ]:
 
 
 cmd = "sierrapy mutations PR:K64V -o output.json"
 print (subprocess.check_output(cmd, shell=True))
 
 
-# In[164]:
+# In[ ]:
 
 
 vcfFile = '/Users/jenniferureta/Desktop/bioinfo/HIV/sequence/HIV2-171/171_mult.vcf'
@@ -396,7 +396,7 @@ print("INT MUT",int_mut)
 createHIVDBRequest(protease_mut, rt_mut,int_mut,"output_171.json")
 
 
-# In[149]:
+# In[ ]:
 
 
 def insertVariants(vcfFile,pFileName, rtFileName, iFileName): 
@@ -435,7 +435,7 @@ def insertVariants(vcfFile,pFileName, rtFileName, iFileName):
     return protease_seq, rt_seq, i_seq
 
 
-# In[150]:
+# In[ ]:
 
 
 def getMutations(pseq, rtseq, iseq, refP, refRT, refI):
@@ -511,7 +511,7 @@ def getMutations(pseq, rtseq, iseq, refP, refRT, refI):
 
 
 
-# In[151]:
+# In[ ]:
 
 
 
@@ -549,7 +549,7 @@ for record in vcf_reader:
 """
 
 
-# In[176]:
+# In[ ]:
 
 
 def convertSAMtoBAM(input_file, output_file):
@@ -561,7 +561,7 @@ def convertSAMtoBAM(input_file, output_file):
 
 
 def sortBAM(input_file, output_file):
-    command = "samtools sort -o "+output_file+input_file
+    command = "samtools sort -o "+output_file+" " +input_file
     print(subprocess.call(command, shell = True))
 
 
@@ -569,52 +569,65 @@ def sortBAM(input_file, output_file):
 
 
 def indexBAM(file)
-    command = "samtools -b "+ input_file
+    command = "samtools index "+ input_file
     print(subprocess.call(command, shell = True))
 
 
-# In[2]:
+# In[ ]:
 
 
-def performAlignment(in_dir, out_dir, log_file, index):
-    for entry in os.scandir(in_dir):
-        if entry.is_dir() and entry.name.startswith('HIV2'):
-            #print(entry.name)
-            file1 = in_dir+"/"+entry.name+"/"+entry.name +"_1.fastq"
-            #print(file1)
-            file2 = in_dir+"/"+entry.name+"/"+entry.name +"_2.fastq"
-            #print(file2)
-            out = out_dir+"/"+entry.name+".sam"
-            print("OUT",out)
-            #print(log_file)
-            print("Path",os.path.exists(out_dir))
-            if not os.path.exists(out_dir):
-             #   print("here")
-                os.mkdir(out_dir,0o777)                
-            command = "(bowtie2 --local -q -x "+ index + " -1 "+file1+ " -2 "+ file2 +" -S "+ out+" )2>> "+log_file
-            print(command)
-            processing = "(echo -e "+"\"\\n\\n"+entry.name+ "\\n\\n\")>>"+log_file 
-            print("Processing ", processing)
-            subprocess.call(processing, shell= True)
-            print(subprocess.call(command,shell=True))
+def performAlignment(file1, file2, out, log_file, index):
+   
+    command = "(bowtie2 --local -q -x "+ index + " -1 "+file1+ " -2 "+ file2 +" -S "+ out+" )2>> "+log_file
+    print(command)
+    processing = "(echo -e "+"\"\\n\\n"+entry.name+ "\\n\\n\")>>"+log_file 
+    print("Processing ", processing)
+    subprocess.call(processing, shell= True)
 
 
-# In[5]:
+# In[ ]:
+
+
+def callVariant(ref, inputf, outputf, log, threads):
+    count =  str(threads)
+    command = "(lofreq call-parallel --pp-threads +"+count+" -f"
+    command = command + ref +" "+ -o " "+ outputf + " "+inputf)2>>log" 
+    subprocess.call(command, shell = True)
+
+
+# In[ ]:
 
 
 indir = "/Users/jenniferureta/Desktop/bioinfo/HIV/sequence"
+
 outdir = "/Users/jenniferureta/Desktop/bioinfo/HIV/sequence_out"
 logf = "/Users/jenniferureta/Desktop/bioinfo/HIV/sequence_out/file_test.log"
 index = "/Users/jenniferureta/Desktop/bioinfo/hxb2"
-performAlignment(indir,outdir,logf,index)
+for entry in os.scandir(in_dir):
+    if entry.is_dir() and entry.name.startswith('HIV2'):
+        file1 = in_dir+"/"+entry.name+"/"+entry.name +"_1.fastq"
+        file2 = in_dir+"/"+entry.name+"/"+entry.name +"_2.fastq"
+        out = out_dir+"/"+entry.name+".sam"
+        filename = out_dir+"/"+entry.name
+        print("OUT",out)
+        #print(log_file)
+        print("Path",os.path.exists(out_dir))
+        if not os.path.exists(out_dir):
+         # print("here")
+            os.mkdir(out_dir,0o777)  
+        performAlignment(file1, file2, out, logf, index)
+        outputf = out_dir+"/"+entry.name+".bam"
+        convertSAMtoBAM(out, outputf)
+        sortBam(outputf, outputf)
+        indexBam(outputf)
+
+        
 
 
-# In[4]:
+# In[ ]:
 
 
-inputf = "/Users/jenniferureta/Desktop/bioinfo/RESULTS_LOCAL/HIV2_171.sam "
-outputf = "/Users/jenniferureta/Desktop/bioinfo/RESULTS_LOCAL/test.bam "
-convertSAMtoBAM(inputf, outputf)
+
 
 
 # In[ ]:
