@@ -570,7 +570,7 @@ in_dir = "/Users/jenniferureta/Desktop/bioinfo/HIV/sequence"
 out_dir = "/Users/jenniferureta/Desktop/bioinfo/HIV/sequence_out"
 logf = "/Users/jenniferureta/Desktop/bioinfo/HIV/sequence_out/file_test.log"
 ref = "/Users/jenniferureta/Desktop/bioinfo/HIV/sequence.fasta"
-buildIndex(ref)
+#buildIndex(ref)
 index = "hxb2"
 for entry in os.scandir(in_dir):
     if entry.is_dir() and entry.name.startswith('HIV2'):
@@ -584,17 +584,29 @@ for entry in os.scandir(in_dir):
         if not os.path.exists(out_dir):
          # print("here")
             os.mkdir(out_dir,0o777)  
-        performAlignment(file1, file2, out, logf, index)
+        #performAlignment(file1, file2, out, logf, index)
         outputf = out_dir+"/"+entry.name+".bam"
-        convertSAMtoBAM(out, outputf)
-        sortBAM(outputf, outputf)
-        indexBAM(outputf)
+        #convertSAMtoBAM(out, outputf)
+        #sortBAM(outputf, outputf)
+        #indexBAM(outputf)
         vcf = out_dir+"/"+entry.name+".vcf"
-        callVariant(ref, outputf, vcf, logf, 8)
-        
-
-
-
+        #callVariant(ref, outputf, vcf, logf, 8)
+        getGeneRegions()
+        getAminoAcids("protease.txt", "protease_amino.txt")
+        getAminoAcids("reverse_transcriptase.txt", "rt_amino.txt")
+        getAminoAcids("integrase.txt", "integrase_amino.txt")
+        prot,rt,i = insertVariants_mult(vcf,"protease.txt","reverse_transcriptase.txt","integrase.txt")
+        refp = "protease_amino.txt"
+        refrt = "rt_amino.txt"
+        refi = "integrase_amino.txt"
+        protease_mut = getMutations_mult(prot,refp)
+        #print("PROTEASE MUT",protease_mut)
+        rt_mut = getMutations_mult(rt,refrt)
+        #print("RT MUT",rt_mut)
+        int_mut = getMutations_mult(i,refi)
+        #print("INT MUT",int_mut)
+        outputf = out_dir+"/"+entry.name+".json"
+        createHIVDBRequest(protease_mut, rt_mut,int_mut,outputf)
 
 
 
