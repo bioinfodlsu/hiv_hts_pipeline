@@ -590,7 +590,7 @@ for entry in os.scandir(in_dir):
         #sortBAM(outputf, outputf)
         #indexBAM(outputf)
         vcf = out_dir+"/"+entry.name+".vcf"
-        #callVariant(ref, outputf, vcf, logf, 8)
+        callVariant(ref, outputf, vcf, logf, 8)
         getGeneRegions()
         getAminoAcids("protease.txt", "protease_amino.txt")
         getAminoAcids("reverse_transcriptase.txt", "rt_amino.txt")
