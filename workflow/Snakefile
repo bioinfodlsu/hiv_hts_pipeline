@@ -1,0 +1,20 @@
+#from snakemake.utils import min_version
+#min_version("6.0")
+#
+# module last_workflow:
+#     snakefile:"rules/last.smk"
+#     config:config
+# use rule * from last_workflow
+#
+# module bowtie_workflow:
+#     snakefile:"rules/bowtie.smk"
+#     config:config
+# use rule* from bowtie_workflow
+
+include:"rules/last.smk"
+include:"rules/bowtie.smk"
+
+rule all: #Initial Rule in snakemake
+    input:
+        expand("{out_dir}/bowtie2_alignments/{sample_id}.sam",out_dir = config["out_dir"],sample_id=config["reads"].keys()),
+        #expand("{out_dir}/last_alignments/{sample_id}.tab", out_dir = config["out_dir"],sample_id=config["reads"].keys())

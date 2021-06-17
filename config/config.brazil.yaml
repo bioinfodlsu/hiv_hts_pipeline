@@ -1,0 +1,18 @@
+reference: /data-ss-2/data-hiv/reference/hxb2.fa
+
+reads:
+    SRR7993842:
+        [/data-ss-2/data-hiv/reads/brazil/SRR7993842/SRR7993842_1.fastq.gz, /data-ss-2/data-hiv/reads/brazil/SRR7993842/SRR7993842_2.fastq.gz]
+    SRR7993843:
+         [/data-ss-2/data-hiv/reads/brazil/SRR7993843/SRR7993843_1.fastq.gz, /data-ss-2/data-hiv/reads/brazil/SRR7993843/SRR7993843_2.fastq.gz]
+    SRR7993844:
+         [/data-ss-2/data-hiv/reads/brazil/SRR7993844/SRR7993844_1.fastq.gz, /data-ss-2/data-hiv/reads/brazil/SRR7993844/SRR7993844_2.fastq.gz]
+    SRR7993845:
+         [/data-ss-2/data-hiv/reads/brazil/SRR7993845/SRR7993845_1.fastq.gz, /data-ss-2/data-hiv/reads/brazil/SRR7993845/SRR7993845_2.fastq.gz]
+    SRR7993846:
+         [/data-ss-2/data-hiv/reads/brazil/SRR7993846/SRR7993846_1.fastq.gz, /data-ss-2/data-hiv/reads/brazil/SRR7993846/SRR7993846_2.fastq.gz]
+
+out_dir:
+    /data-ss-2/data-hiv/alns/brazil
+
+training: "yes"
