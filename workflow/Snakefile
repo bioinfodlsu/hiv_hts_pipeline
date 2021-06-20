@@ -10,11 +10,19 @@
 #     snakefile:"rules/bowtie.smk"
 #     config:config
 # use rule* from bowtie_workflow
+from snakemake.utils import Paramspace
+import pandas as pd
 
-include:"rules/last.smk"
+#last_paramspace = Paramspace(pd.read_csv("params/last_params.tsv",sep="\t"))
+bowtie2_paramspace = Paramspace(pd.read_csv("params/bowtie2_params.tsv",sep="\t"))
+
+#include:"rules/last.smk"
 include:"rules/bowtie.smk"
 
 rule all: #Initial Rule in snakemake
     input:
-        expand("{out_dir}/bowtie2_alignments/{sample_id}.sam",out_dir = config["out_dir"],sample_id=config["reads"].keys()),
-        #expand("{out_dir}/last_alignments/{sample_id}.tab", out_dir = config["out_dir"],sample_id=config["reads"].keys())
+        #expand("{out_dir}/bowtie2_alignments/{sample_id}/{params}.sam",out_dir = config["out_dir"],sample_id=config["reads"].keys(),params=bowtie2_paramspace.instance_patterns),
+        expand("{out_dir}/bowtie2_alignments/{sample_id}.{params}.sam",
+                out_dir = config["out_dir"],sample_id=config["reads"].keys(),params=bowtie2_paramspace.instance_patterns)
+        #expand("{out_dir}/last_alignments/{sample_id}.{params}.tab",
+        #        out_dir = config["out_dir"],sample_id=config["reads"].keys(),params=last_paramspace.instance_patterns)

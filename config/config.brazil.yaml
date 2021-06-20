@@ -13,6 +13,6 @@ reads:
          [/data-ss-2/data-hiv/reads/brazil/SRR7993846/SRR7993846_1.fastq.gz, /data-ss-2/data-hiv/reads/brazil/SRR7993846/SRR7993846_2.fastq.gz]
 
 out_dir:
-    /data-ss-2/data-hiv/alns/brazil
+    /data-ss-2/data-hiv/alns_params/brazil
 
 training: "yes"
