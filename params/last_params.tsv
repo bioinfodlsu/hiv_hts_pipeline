@@ -1,1 +1,3 @@
-match	mismatch	gap_exist	gap_extension
+match	mismatch	gapOpen	gapExtend
+2	3	5	2
+6	18	21	9

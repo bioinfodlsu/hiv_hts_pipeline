@@ -17,12 +17,12 @@ rule align_bowtie2:
     threads:
         workflow.cores/len(config["reads"])
     params:
-        fromFile=bowtie2_paramspace.instance,
+        fromParamsFile=bowtie2_paramspace.instance,
         index_basename = rules.index_bowtie2.params.index_basename,
 
     output:
-        "{0}".format(config['out_dir'])+"/bowtie2_alignments/{sample_id}"+f".{bowtie2_paramspace.wildcard_pattern}.sam"
+        "{0}".format(config['out_dir'])+"/bowtie2_alignments/{sample_id}/"+f"{bowtie2_paramspace.wildcard_pattern}/alns.sam"
         #Snakemake is confusing. note that in each of the components above, the curly braces serve a different purpose.
     shell:
-        "bowtie2 --local --{params.fromFile[preset]} -x {params.index_basename}  -1 {input.reads1} -2 {input.reads2} -S {output}"
+        "bowtie2 --local --{params.fromParamsFile[preset]} -x {params.index_basename}  -1 {input.reads1} -2 {input.reads2} -S {output}"
         #Snakemake is confusing. Why is preset allowed but not 'preset' ??

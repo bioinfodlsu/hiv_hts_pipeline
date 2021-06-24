@@ -21,8 +21,8 @@ def get_read2(wildcards):
     return config["reads"][wildcards.sample_id][1]
 
 
-def getMean(wildcard):
-    est_path = "{}/last_alignments/{}.frag_len_est".format(config["out_dir"],wildcard)
+def getMean(wildcards):
+    est_path = "{}/last_alignments/{}.frag_len_est".format(config["out_dir"],wildcards.sample_id)
     if(path.exists(est_path)):
         with open(est_path) as f:
             for line in f:
@@ -31,8 +31,8 @@ def getMean(wildcard):
     else:
         return(-1)
 
-def getSTD(wildcard):
-    est_path = "{}/last_alignments/{}.frag_len_est".format(config["out_dir"],wildcard)
+def getSTD(wildcards):
+    est_path = "{}/last_alignments/{}.frag_len_est".format(config["out_dir"],wildcards.sample_id)
     if(path.exists(est_path)):
         with open(est_path) as f:
             for line in f:
@@ -41,13 +41,9 @@ def getSTD(wildcard):
     else:
         return(-1)
 
-def getScoring(wildcards):
-    if "training" in config:
-        if config["training"].lower() != "no":
-            return "{}/score_sample/scoring_scheme".format(config["out_dir"])
-        else: return "HOXD70"
-    else:
-        return "HOXD70"
+# def getScoring(wildcards):
+#     return "{}/score_sample/scoring_scheme".format(config["out_dir"])
+
 
 def get_input_align_last(wildcards):
     input_dict = {}
@@ -55,11 +51,11 @@ def get_input_align_last(wildcards):
     input_dict["reads1"] = get_read1(wildcards)
     input_dict["reads2"] = get_read2(wildcards)
     #input_dict["frag_len_est"] = config["out_dir"]+"last_alignments/{sample_id}.frag_len_est"
-    if "training" in config:
-        if config["training"].lower() != "no":
-            input_dict["scoring"] = "{0}/score_sample/scoring_scheme".format(config["out_dir"])
-    else:
-        input_dict["scoring"] = "{0}/score_sample/scoring_scheme".format(config["out_dir"])
+    # if "training" in config:
+    #     if config["training"].lower() != "no":
+    #         input_dict["scoring"] = "{0}/score_sample/scoring_scheme".format(config["out_dir"])
+    # else:
+    #     input_dict["scoring"] = "{0}/score_sample/scoring_scheme".format(config["out_dir"])
     return input_dict
 
 
@@ -102,30 +98,49 @@ rule last_score_training: #Rule for training score parameters
 rule last_frag_stat_est: #Rule for estimating length distribution of paired-end reads
     input:
         unpack(get_input_align_last)
-        #reference_flag = config["out_dir"]+"last_index/index.done",
-        #reads1 = get_read1,
-        #reads2 = get_read2,
-        #scoring = config["out_dir"]+"last_sample/scoring_scheme",
     params:
         last_index_basename= "{0}/last_index/index".format(config["out_dir"]),
         last_al = "{0}/last_alignments".format(config["out_dir"]),
-        scoring = getScoring
     output :
         frag_len_est="{0}/last_alignments/{{sample_id}}.frag_len_est".format(config["out_dir"])
     #conda:
     #    "env/last.yaml"
     shell:
+        #note that the lastal for last-pair-probs uses LAST's default scoring scheme instead of learned scores
         """
         set +o pipefail;
         mkfifo {params.last_al}/{wildcards.sample_id}_1
         mkfifo {params.last_al}/{wildcards.sample_id}_2
         gzip -cdf {input.reads1} | head -n 400000 > {params.last_al}/{wildcards.sample_id}_1 &
         gzip -cdf {input.reads2} | head -n 400000 > {params.last_al}/{wildcards.sample_id}_2 &
-        fastq-interleave {params.last_al}/{wildcards.sample_id}_1 {params.last_al}/{wildcards.sample_id}_2 | lastal -Q1 -i1 -p {params.scoring}  {params.last_index_basename} | last-pair-probs -e > {output.frag_len_est}
+        fastq-interleave {params.last_al}/{wildcards.sample_id}_1 {params.last_al}/{wildcards.sample_id}_2 | lastal -Q1 -i1 {params.last_index_basename} | last-pair-probs -e > {output.frag_len_est}
         rm {params.last_al}/{wildcards.sample_id}_1 {params.last_al}/{wildcards.sample_id}_2
         """
 
-rule align_last: #Rule for aligning RNA-seq reads to protein database
+rule align_last: #Rule for aligning paired-end reads to a reference genome, with score training
+    input:
+        unpack(get_input_align_last),
+        scoring = "{0}/score_sample/scoring_scheme".format(config["out_dir"]),
+        frag_len_est = "{0}/last_alignments/{{sample_id}}.frag_len_est".format(config["out_dir"])
+    params:
+        last_index_basename="{0}/last_index/index".format(config["out_dir"]),
+        mean = getMean,
+        std = getSTD,
+        #scoring = getScoring,
+    threads: workflow.cores/len(config["reads"])
+    output:
+        "{0}/last_trained_alignments/{{sample_id}}.tab".format(config["out_dir"])
+    #conda:
+    #    "env/lastal.yaml"
+    shell:
+        "fastq-interleave {input.reads1} {input.reads2} | "
+        "lastal -Q1 -i1 -p {input.scoring} {params.last_index_basename} |"
+        "last-pair-probs -f {params.mean} -s {params.std} -m 0.01 -d 0.1 |"
+        "maf-convert tab > {output}"
+
+rule align_last_paramsFromFile:
+# Rule for aligning paired-end reads to a reference genome, with score parameters provided by user.
+#It would have been nicer to incorporate this in the rule align_last, but it is too messy and hurts readability and debuggability
     input:
         unpack(get_input_align_last),
         frag_len_est = "{0}/last_alignments/{{sample_id}}.frag_len_est".format(config["out_dir"])
@@ -133,15 +148,11 @@ rule align_last: #Rule for aligning RNA-seq reads to protein database
         last_index_basename="{0}/last_index/index".format(config["out_dir"]),
         mean = getMean,
         std = getSTD,
-        #scoring = config["out_dir"]+"last_sample/scoring_scheme"
-        scoring = getScoring
-    threads: workflow.cores/len(config["reads"])
+        fromParamsFile=last_paramspace.instance
     output:
-        "{0}/last_alignments/{{sample_id}}.tab".format(config["out_dir"])
-    #conda:
-    #    "env/lastal.yaml"
+        "{0}".format(config['out_dir'])+"/last_alignments/{sample_id}/"+f"{last_paramspace.wildcard_pattern}/alns.tab"
     shell:
         "fastq-interleave {input.reads1} {input.reads2} | "
-        "parallel --gnu --pipe -L4 -j {threads} 'lastal -Q1 -i1 -p {params.scoring} {params.last_index_basename}' |"
+        "lastal -Q1 -i1 -r {params.fromParamsFile[match]} -q {params.fromParamsFile[mismatch]} -a {params.fromParamsFile[gapOpen]} -b {params.fromParamsFile[gapExtend]} {params.last_index_basename} |"
         "last-pair-probs -f {params.mean} -s {params.std} -m 0.01 -d 0.1 |"
         "maf-convert tab > {output}"
