@@ -15,7 +15,6 @@ module module_bowtie2:
 
 use rule * from module_bowtie2
 
-
 rule all:
     input:
         expand("{out_dir}/bowtie2_alignments/{sample_id}/{params}/alns.sam",
