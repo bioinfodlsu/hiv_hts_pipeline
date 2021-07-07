@@ -1,0 +1,15 @@
+name: hiv
+channels:
+  - conda-forge
+  - bioconda
+  - defaults
+dependencies:
+  - igv
+  - last
+  - lofreq
+  - fastqc
+  - fastp
+  - graphviz
+  - snakemake
+  - blast
+  - bowtie2
