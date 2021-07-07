@@ -17,5 +17,5 @@ snakemake --configfile config/config.drm.yaml -np
 ```
 to do a dry-run. If everything seems ok, then run:
 ```
-snakemake --configfile config/config.drm.yaml -np 
+snakemake --configfile config/config.drm.yaml --cores all
 ```
