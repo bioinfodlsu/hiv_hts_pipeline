@@ -2,7 +2,7 @@ reference: /data-ss-2/data-hiv/reference/hxb2.fa
 
 reads:
     SRR7993842:
-        [/data-ss-2/data-hiv/reads/brazil/SRR7993842/SRR7993842_1.fastq.gz, /data-ss-2/data-hiv/reads/brazil/SRR7993842/SRR7993842_2.fastq.gz]
+        [/data-ss-2/data-hiv/reads/brazil/SRR7993842/sample_1.fastq.gz, /data-ss-2/data-hiv/reads/brazil/SRR7993842/_2.fastq.gz]
     # SRR7993843:
     #      [/data-ss-2/data-hiv/reads/brazil/SRR7993843/SRR7993843_1.fastq.gz, /data-ss-2/data-hiv/reads/brazil/SRR7993843/SRR7993843_2.fastq.gz]
     # SRR7993844:
@@ -13,8 +13,11 @@ reads:
     #       [/data-ss-2/data-hiv/reads/brazil/SRR7993846/SRR7993846_1.fastq.gz, /data-ss-2/data-hiv/reads/brazil/SRR7993846/SRR7993846_2.fastq.gz]
 
 out_dir:
-    /data-ss-2/data-hiv/drm/brazil
+    /data-ss-2/data-hiv/drm_alns/brazil
 
-#training: "yes"
-#last_param_space_file: "params/last_params.tsv" #path relative to top folder
-bowtie2_param_space_file: "params/bowtie2_params.tsv"
+# parameters for Bowtie2
+bowtie2_params:
+  [
+   ["param_group_name","preset"], 
+   ["1","sensitive-local"]
+  ]

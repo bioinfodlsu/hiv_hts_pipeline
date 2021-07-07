@@ -1,18 +1,16 @@
-# Do we need this? Maybe directly sort?
-
 rule sortBAM:
     input:
-        "{0}".format(config['out_dir'])+"/bowtie2_alignments/{sample_id}/paramgroup_{param_group}.bam"
+        "{0}".format(config['out_dir'])+"/bowtie2_alignments/{sample_id}/paramgroup_{param_group}/alns.bam"
     output:
-        "{0}".format(config['out_dir'])+"/bowtie2_alignments/{sample_id}/paramgroup_{param_group}.sorted.bam"
+        "{0}".format(config['out_dir'])+"/bowtie2_alignments/{sample_id}/paramgroup_{param_group}/alns.sorted.bam"
     shell:
-        samtools sort -o {output} {input}
+        "samtools sort -o {output} {input}"
 
 
 rule indexBAM:
     input:
-        "{0}".format(config['out_dir'])+"/bowtie2_alignments/{sample_id}/paramgroup_{param_group}.sorted.bam"
+        "{0}".format(config['out_dir'])+"/bowtie2_alignments/{sample_id}/paramgroup_{param_group}/alns.sorted.bam"
     output:
-        "{0}".format(config['out_dir'])+"/bowtie2_alignments/{sample_id}/paramgroup_{param_group}.sorted.bam.bai"
+        "{0}".format(config['out_dir'])+"/bowtie2_alignments/{sample_id}/paramgroup_{param_group}/alns.sorted.bam.bai"
     shell:
-        samtools index {input}
+        "samtools index {input}"

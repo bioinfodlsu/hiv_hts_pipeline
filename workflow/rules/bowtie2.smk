@@ -15,7 +15,7 @@ rule align_bowtie2:
         reads1 = lambda wildcards: config["reads"][wildcards.sample_id][0],
         reads2 = lambda wildcards: config["reads"][wildcards.sample_id][1]
     output:
-        "{0}".format(config['out_dir'])+"/bowtie2_alignments/{sample_id}/paramgroup_{param_group}.bam"
+        "{0}".format(config['out_dir'])+"/bowtie2_alignments/{sample_id}/paramgroup_{param_group}/alns.bam"
     threads:
         workflow.cores/len(config["reads"])
     params:
@@ -25,4 +25,5 @@ rule align_bowtie2:
 
     shell:
         #"{0}".format(config['out_dir'])+"/bowtie2_alignments/{sample_id}/paramgroup_{param_group}.sam"
-        "{0}".format(config['out_dir'])+"/bowtie2_alignments/{sample_id}/paramgroup_{param_group}.sam | samtools view -bS - > {output}"
+        #"{0}".format(config['out_dir'])+"/bowtie2_alignments/{sample_id}/paramgroup_{param_group}.sam | samtools view -bS - > {output}"
+        "bowtie2 --local --{params.preset} -x {params.index_basename}  -1 {input.reads1} -2 {input.reads2} | samtools view -bS - > {output}"
