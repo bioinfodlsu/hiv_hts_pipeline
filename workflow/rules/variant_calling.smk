@@ -5,9 +5,10 @@ rule lofreq:
         bai = "{0}".format(config['out_dir'])+"/bowtie2_alignments/{sample_id}/paramgroup_{param_group}/alns.sorted.bam.bai"
 
     output:
-        "{0}".format(config['out_dir'])+"/bowtie2_alignments/{sample_id}/paramgroup_{param_group}/variants.vcf"
+        "{0}".format(config['out_dir'])+"/variants/{sample_id}/paramgroup_{param_group}/variants.vcf"
 
-    threads: 10
+    conda:
+        "envs/lofreq.yaml"
 
     shell:
         """

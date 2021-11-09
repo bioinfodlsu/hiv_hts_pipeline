@@ -1,8 +1,10 @@
-reference: /data-ss-2/data-hiv/reference/hxb2.fa
-
+#reference: /data-ss-2/data-hiv/reference/hxb2.fa
+reference: "/home/anish/Dropbox/Anish/research/HIV/data/hxb2.fasta"
 reads:
+    #SRR7993842:
+    #    [/data-ss-2/data-hiv/reads/brazil/SRR7993842/sample_1.fastq.gz, /data-ss-2/data-hiv/reads/brazil/SRR7993842/_2.fastq.gz]
     SRR7993842:
-        [/data-ss-2/data-hiv/reads/brazil/SRR7993842/sample_1.fastq.gz, /data-ss-2/data-hiv/reads/brazil/SRR7993842/_2.fastq.gz]
+        [/home/anish/Dropbox/Anish/research/HIV/data/sample/sample_1.fastq, /home/anish/Dropbox/Anish/research/HIV/data/sample/sample_2.fastq]
     # SRR7993843:
     #      [/data-ss-2/data-hiv/reads/brazil/SRR7993843/SRR7993843_1.fastq.gz, /data-ss-2/data-hiv/reads/brazil/SRR7993843/SRR7993843_2.fastq.gz]
     # SRR7993844:
@@ -13,11 +15,12 @@ reads:
     #       [/data-ss-2/data-hiv/reads/brazil/SRR7993846/SRR7993846_1.fastq.gz, /data-ss-2/data-hiv/reads/brazil/SRR7993846/SRR7993846_2.fastq.gz]
 
 out_dir:
-    /data-ss-2/data-hiv/drm_alns/brazil
+    #/data-ss-2/data-hiv/drm_alns/brazil
+    /home/anish/Dropbox/Anish/research/HIV/data/drm_sample
 
 # parameters for Bowtie2
 bowtie2_params:
   [
-   ["param_group_name","preset"], 
+   ["param_group_name","preset"],
    ["1","sensitive-local"]
   ]

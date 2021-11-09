@@ -2,9 +2,8 @@
 # coding: utf-8
 
 
-
 from __future__ import print_function
-import vcf 
+import vcf
 import sierrapy
 import json
 import requests
@@ -12,26 +11,25 @@ import subprocess
 import os
 
 
-
-aminoAcids ={   
-#Phenylalanine    
+aminoAcids ={
+#Phenylalanine
 "TTT": "F",
 "TTC": "F",
-#Leucine    
-"TTA": "L",     
+#Leucine
+"TTA": "L",
 "TTG": "L",
 "CTT": "L",
 "CTC": "L",
 "CTA": "L",
-"CTG": "L", 
+"CTG": "L",
 #Isoleucine
 "ATT": "I",
-"ATC": "I", 
-"ATA": "I", 
-#Methioinine    
-"ATG": "M", 
-#Valine  
-"GTT": "V", 
+"ATC": "I",
+"ATA": "I",
+#Methioinine
+"ATG": "M",
+#Valine
+"GTT": "V",
 "GTC": "V",
 "GTA": "V",
 "GTG": "V",
@@ -41,8 +39,8 @@ aminoAcids ={
 "TCA": "S",
 "TCG": "S",
 "AGT": "S",
-"AGC": "S",    
-#Proline  
+"AGC": "S",
+#Proline
 "CCT": "P",
 "CCC": "P",
 "CCA": "P",
@@ -51,7 +49,7 @@ aminoAcids ={
 "ACT": "T",
 "ACC": "T",
 "ACA": "T",
-"ACG": "T",      
+"ACG": "T",
 #Alanine
 "GCT": "A",
 "GCC": "A",
@@ -76,7 +74,7 @@ aminoAcids ={
 "GAT": "D",
 "GAC": "D",
 #Glutamic acid
-"GAA": "E",    
+"GAA": "E",
 "GAG": "E",
 #Cysteine
 "TGT": "C",
@@ -87,18 +85,18 @@ aminoAcids ={
 "CGT": "R",
 "CGC": "R",
 "CGA": "R",
-"CGG": "R", 
+"CGG": "R",
 "AGA": "R",
-"AGG": "R",     
+"AGG": "R",
 #Glycine
 "GGT": "G",
 "GGC": "G",
 "GGA": "G",
-"GGG": "G",    
+"GGG": "G",
 #stop
 "TAA": "*",
-"TAG": "*",  
-"TGA": "*"         
+"TAG": "*",
+"TGA": "*"
 }
 
 
@@ -112,7 +110,7 @@ def getCharacter(position):
     for i, line in enumerate(fp):
         if i == line_num:
             return line[char_num]
-        
+
 
 
 
@@ -138,7 +136,7 @@ def getCodon(start,position,alt):
         codon.append(getCharacter(position-1))
         codon.append(alt)#codon.append(getCharacter(position))
     codon.append(adjusted+1) #position number in protease region. starts at 1
-    return codon   
+    return codon
 
 
 
@@ -166,8 +164,8 @@ def getSequence(start,end):
 
 
 
-def getGeneRegions():  
-    
+def getGeneRegions():
+
     #protease
     pStart = 2252
     pEnd = 2548
@@ -188,7 +186,7 @@ def getGeneRegions():
     intf = open("integrase.txt", "w")
     intf.write(integrase)
     intf.close()
-  
+
 
 
 
@@ -214,8 +212,8 @@ def getAminoAcids(inputF,outputF):
 
 
 def getCombinations(base1,  base2, base3,reference):
-# returns all possible combinations 
- 
+# returns all possible combinations
+
     mutations = []
     #print("Bases", base1, base2, base3)
     for i in range (len(base1)):
@@ -225,17 +223,17 @@ def getCombinations(base1,  base2, base3,reference):
                 #print("CODON:",codonStr)
                 trans = aminoAcids.get(codonStr,"!")
                 #print("TRANS:",trans, reference)
-                if trans!="!" and trans!=reference: 
+                if trans!="!" and trans!=reference:
                     #add as a mutation only if it differs from the reference
                     if trans not in mutations:
                         #print("ALT codon",codonStr)
                         mutations.append(trans)
-    return mutations        
+    return mutations
 
 
 
 
-def getMutations_mult(mut,refG): 
+def getMutations_mult(mut,refG):
     #returns all possible amino acid mutations per position
     #protease
     mutList = []
@@ -251,32 +249,33 @@ def getMutations_mult(mut,refG):
         if len(combinations)>0:
             print("MUTATION:", codonct, ref_gene[codonct-1], "comb", combinations)
             mutList.append([codonct,ref_gene[codonct-1],combinations])
-           
+
         codonct = codonct + 1
-        
-    print("M",mutList) 
+
+    print("M",mutList)
     return mutList
 
 
 
 
-def insertVariants_mult(vcfFile,pFileName, rtFileName, iFileName): 
-    #gets all possible alternative bases per position
-    vcf_reader = vcf.Reader(open(vcfFile,'r'))  
+def insertVariants_mult(vcfFile,pFileName, rtFileName, iFileName):
+    #gets all possible
+    alternative bases per position
+    vcf_reader = vcf.Reader(open(vcfFile,'r'))
     pFile = open(pFileName, 'r')
     protease_seq = [ch for ch in pFile.read()]
     rtFile = open(rtFileName, 'r')
-    rt_seq = [ch for ch in rtFile.read()]   
+    rt_seq = [ch for ch in rtFile.read()]
     iFile = open(iFileName, 'r')
     i_seq = [ch for ch in iFile.read()]
     #protease
     for record in vcf_reader:
-       
+
         if record.POS >=2253 and record.POS <2550: #protease
             #print("variant",record.POS,record.POS-2253,record.REF,record.ALT)
             #print(record)
             alt = record.ALT
-            
+
             temp = []
             #temp.append(record.REF)
             #temp.append(protease_seq[record.POS-2253])
@@ -284,7 +283,7 @@ def insertVariants_mult(vcfFile,pFileName, rtFileName, iFileName):
                 base = str(alt[0])[i]
                 if base not in temp:
                     temp.append(base)
-            protease_seq[record.POS-2253] = temp 
+            protease_seq[record.POS-2253] = temp
             #print( "prot",protease_seq[record.POS-2253])
         elif record.POS >=2550 and record.POS < 4229: #3869: #reverse transcriptase
             #print("variant",record.POS,record.POS-2550,record.REF,record.ALT)
@@ -296,7 +295,7 @@ def insertVariants_mult(vcfFile,pFileName, rtFileName, iFileName):
                 base = str(alt[0])[i]
                 if base not in temp:
                     temp.append(base)
-            rt_seq[record.POS-2550] = temp 
+            rt_seq[record.POS-2550] = temp
             #print(rt_seq[record.POS-2550])
         elif record.POS >=4230 and record.POS <=5093: #5096 minus stop codon #integrase
             #print("variant",record.POS,record.POS-4230,record.REF,record.ALT)
@@ -308,9 +307,9 @@ def insertVariants_mult(vcfFile,pFileName, rtFileName, iFileName):
                 base = str(alt[0])[i]
                 if base not in temp:
                     temp.append(base)
-            i_seq[record.POS-4230] = temp 
+            i_seq[record.POS-4230] = temp
             #print(i_seq[record.POS-4230])
-            
+
     return protease_seq, rt_seq, i_seq
 
 
@@ -341,7 +340,7 @@ def createHIVDBRequest(prot,rt,integrase, out):
             #print("SIERRA: " , i[0],i[1], j)
             mut = "RT:"+i[1]+str(i[0])+j
             print("SIERRA", mut)
-            cmd = cmd + " "+mut      
+            cmd = cmd + " "+mut
     #protStr
     cmd = cmd + " -o "+out
     #cmd = 'sierrapy mutations PR:L10I -o output_171.json'
@@ -353,8 +352,6 @@ def createHIVDBRequest(prot,rt,integrase, out):
 
 cmd = "sierrapy mutations PR:K64V -o output.json"
 print (subprocess.check_output(cmd, shell=True))
-
-
 
 
 
@@ -374,23 +371,23 @@ createHIVDBRequest(protease_mut, rt_mut,int_mut,"output_171.json")
 """
 
 
-def insertVariants(vcfFile,pFileName, rtFileName, iFileName): 
+def insertVariants(vcfFile,pFileName, rtFileName, iFileName):
     #one mutation per position and returns amino acids
     vcf_reader = vcf.Reader(open(vcfFile,'r'))
-    
+
     pFile = open(pFileName, 'r')
     protease_seq = [ch for ch in pFile.read()]
     #print("PROT", protease_seq)
     rtFile = open(rtFileName, 'r')
-    rt_seq = [ch for ch in rtFile.read()]   
+    rt_seq = [ch for ch in rtFile.read()]
     #print("RT", rt_seq)
     iFile = open(iFileName, 'r')
     i_seq = [ch for ch in iFile.read()]
     #print("I", i_seq)
     #lofreq starts at 1 but our indexing starts at 0 so always subtract 1 from the position given
-    
+
     for record in vcf_reader:
-       
+
         if record.POS >=2253 and record.POS <2550: #protease
             print("variant",record.POS,record.POS-2253,record.REF,record.ALT)
             alt = record.ALT[0]
@@ -403,10 +400,10 @@ def insertVariants(vcfFile,pFileName, rtFileName, iFileName):
             print("variant",record.POS,record.POS-4230,record.REF,record.ALT)
             alt = record.ALT[0]
             i_seq[record.POS-4230] = alt
-            
-   # print("PROT VAR\n",protease_seq) 
-    #print("RT VAR\n",rt_seq) 
-    #print("I VAR\n",i_seq) 
+
+   # print("PROT VAR\n",protease_seq)
+    #print("RT VAR\n",rt_seq)
+    #print("I VAR\n",i_seq)
     return protease_seq, rt_seq, i_seq
 
 
@@ -415,7 +412,7 @@ def insertVariants(vcfFile,pFileName, rtFileName, iFileName):
 
 def getMutations(pseq, rtseq, iseq, refP, refRT, refI):
     #protease
-    
+
     pmutations=[]
     rtmutations=[]
     imutations=[]
@@ -441,7 +438,7 @@ def getMutations(pseq, rtseq, iseq, refP, refRT, refI):
         codonStr = str(rtseq[i])+str(rtseq[i+1])+str(rtseq[i+2])
         #print("CODON",rtseq[i],rtseq[i+1],rtseq[i+2], codonStr)
         rttranslation = rttranslation + aminoAcids.get(codonStr,"!")
-       
+
     #output file format POSITION REF ALT
     rf = open(refRT, 'r')
     ref_RT = [ch for ch in rf.read()]
@@ -498,7 +495,7 @@ mutations=[]
 for record in vcf_reader:
     if record.POS >=2253 or record.POS <2550: #for protease gene 2253-2550
         mutation_position = int(record.POS)
-        pCodon = getCodon(proteaseStart,mutation_position-1,record.ALT) 
+        pCodon = getCodon(proteaseStart,mutation_position-1,record.ALT)
         codonStr = pCodon[0]+pCodon[1]+pCodon[2]
         print(codonStr)
         print(aminoAcids.get(codonStr,0)) #0 if not found in amino acid table
@@ -538,7 +535,7 @@ def indexBAM(input_file):
 
 
 def performAlignment(file1, file2, out, log_file, index):
-   
+
     command = "(bowtie2 --local -q -x "+ index + " -1 "+file1+ " -2 "+ file2 +" -S "+ out+" )2>> "+log_file
     print(command)
     subprocess.call(command, shell= True)
@@ -549,7 +546,7 @@ def performAlignment(file1, file2, out, log_file, index):
 def callVariant(ref, inputf, outputf, log, threads):
     count =  str(threads)
     command = "(lofreq call-parallel --pp-threads +"+count+" -f"
-    command = command + " " +ref +" -o " + outputf + " "+inputf+" )2>> "+log 
+    command = command + " " +ref +" -o " + outputf + " "+inputf+" )2>> "+log
     subprocess.call(command, shell = True)
 
 
@@ -583,7 +580,7 @@ for entry in os.scandir(in_dir):
         print("Path",os.path.exists(out_dir))
         if not os.path.exists(out_dir):
          # print("here")
-            os.mkdir(out_dir,0o777)  
+            os.mkdir(out_dir,0o777)
         #performAlignment(file1, file2, out, logf, index)
         outputf = out_dir+"/"+entry.name+".bam"
         #convertSAMtoBAM(out, outputf)
@@ -607,6 +604,3 @@ for entry in os.scandir(in_dir):
         #print("INT MUT",int_mut)
         outputf = out_dir+"/"+entry.name+".json"
         createHIVDBRequest(protease_mut, rt_mut,int_mut,outputf)
-
-
-

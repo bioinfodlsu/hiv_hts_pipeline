@@ -6,6 +6,8 @@ rule index_bowtie2:
        touch("{0}/bowtie2_index/index.done".format(config["out_dir"]))
     params:
        index_basename="{0}/bowtie2_index/index".format(config["out_dir"])
+    conda:
+       "../envs/bowtie2.yaml"
     shell:
        "bowtie2-build {input.reference} {params.index_basename}"
 
@@ -20,9 +22,9 @@ rule align_bowtie2:
         workflow.cores/len(config["reads"])
     params:
         index_basename = rules.index_bowtie2.params.index_basename,
-        preset = lambda wildcards: config["bowtie2_params_dict"][wildcards.param_group]["preset"],
-        X = lambda wildcards: config["bowtie2_params_dict"][wildcards.param_group]["X"]
-
+        preset = lambda wildcards: config["bowtie2_params_dict"][wildcards.param_group]["preset"]
+    conda:
+       "../envs/bowtie2.yaml"
     shell:
         #"{0}".format(config['out_dir'])+"/bowtie2_alignments/{sample_id}/paramgroup_{param_group}.sam"
         #"{0}".format(config['out_dir'])+"/bowtie2_alignments/{sample_id}/paramgroup_{param_group}.sam | samtools view -bS - > {output}"
