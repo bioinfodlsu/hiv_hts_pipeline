@@ -1,6 +1,6 @@
 #Pipeline for DRM calling
 #Here we will read config file which contains information about which tools to use
-#for , and write rules to decide will rules in the rules folder to call.
+#for alignment and variant calling, and write rules to decide will rules in the rules folder to call.
 
 # Parse Bowtie2 parameters.
 #TODO Error checks
@@ -20,22 +20,23 @@ include: "rules/bam.smk"
 include: "rules/variant_calling.smk"
 
 
-rule all:
-    input:
-        expand("{out_dir}/bowtie2_alignments/{sample_id}/paramgroup_{param_group}/alns.sorted.bam.bai",
-                out_dir=config['out_dir'],
-                sample_id=config["reads"].keys(),
-                param_group=config['bowtie2_params_dict'].keys())
+#rule all:
+#    input:
+#        expand("{out_dir}/bowtie2_alignments/{sample_id}/paramgroup_{param_group}/alns.sorted.bam.bai",
+#                out_dir=config['out_dir'],
+#                sample_id=config["reads"].keys(),
+#                param_group=config['bowtie2_params_dict'].keys())
 
 # print(expand("{out_dir}/variants/{sample_id}/paramgroup_{param_group}/variants.vcf",
 #        out_dir = config['out_dir'],
 #        sample_id =  config['reads'].keys(),
 #        param_group=config['bowtie2_params_dict'].keys()
 #       ))
-# rule all:
-#     input:
-#         expand("{out_dir}/variants/{sample_id}/paramgroup_{param_group}/variants.vcf",
-#                out_dir = config['out_dir'],
-#                sample_id =  config['reads'].keys(),
-#                param_group=config['bowtie2_params_dict'].keys()
-#               )
+
+rule all:
+     input:
+         expand("{out_dir}/variants/{sample_id}/paramgroup_{param_group}/variants.vcf",
+                out_dir = config['out_dir'],
+                sample_id =  config['reads'].keys(),
+                param_group=config['bowtie2_params_dict'].keys()
+               )

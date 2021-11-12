@@ -8,7 +8,7 @@ rule lofreq:
         "{0}".format(config['out_dir'])+"/variants/{sample_id}/paramgroup_{param_group}/variants.vcf"
 
     conda:
-        "envs/lofreq.yaml"
+        "../envs/lofreq.yaml"
 
     shell:
         """

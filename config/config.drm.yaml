@@ -4,7 +4,7 @@ reads:
     #SRR7993842:
     #    [/data-ss-2/data-hiv/reads/brazil/SRR7993842/sample_1.fastq.gz, /data-ss-2/data-hiv/reads/brazil/SRR7993842/_2.fastq.gz]
     SRR7993842:
-        [/home/anish/Dropbox/Anish/research/HIV/data/sample/sample_1.fastq, /home/anish/Dropbox/Anish/research/HIV/data/sample/sample_2.fastq]
+        [/home/anish/Dropbox/Anish/research/HIV/data/sample/sample_10K_1.fastq.gz, /home/anish/Dropbox/Anish/research/HIV/data/sample/sample_10K_2.fastq.gz]
     # SRR7993843:
     #      [/data-ss-2/data-hiv/reads/brazil/SRR7993843/SRR7993843_1.fastq.gz, /data-ss-2/data-hiv/reads/brazil/SRR7993843/SRR7993843_2.fastq.gz]
     # SRR7993844:
@@ -16,7 +16,7 @@ reads:
 
 out_dir:
     #/data-ss-2/data-hiv/drm_alns/brazil
-    /home/anish/Dropbox/Anish/research/HIV/data/drm_sample
+    /home/anish/Dropbox/Anish/research/HIV/data/drm_sample_out
 
 # parameters for Bowtie2
 bowtie2_params:
