@@ -62,3 +62,6 @@ for a dry run, and
 snakemake --use-conda --configfile config/config.sample.yaml --cores all
 ```
 for the actual run.
+
+# Contact
+This is an ongoing work. If you have questions, concerns, issues, or suggestions, please contact: Anish Shrestha anish.shrestha@dlsu.edu.ph .
