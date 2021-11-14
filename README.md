@@ -2,9 +2,10 @@
 This is a pipeline for drug-resistance profiling from HIV whole genome NGS data.
 It takes in a HIV reference genome (currently HXB2) and a dataset of reads in (gzipped) fastq format, 
 and performs the following steps: 
+
 1. aligns the reads to the reference, 
-2. performs variant calling, 
-3. and queries the HIVDB system for the presence and degree of drug resistance.
+2. performs variant calling, and
+3. queries the HIVDB system for the presence and degree of drug resistance.
 
 Currently, the pipeline uses Bowtie2 for Step1, Lofreq for Step 2, and sierrapy for Step 3.
 It has only been tested upto Step 2.
@@ -52,7 +53,7 @@ snakemake --use-conda --configfile config/config.sample.yaml --cores all
 The results can be found inside the newly created directory called `test_result`.
 
 # Running the pipeline on your own data
-To the run the pipeline on your own data, you need to specify the paths to the input data (reads and reference), path to the output directory. Optionally, in this config file, you can also set parameters for the various tools that make up this pipeline. You can use `config/config.drm.yaml` as a template.  Once the configfile is ready, run the pipeline like above:
+To the run the pipeline on your own data, you need to specify in a config file the paths to the input data (reads and reference), path to the output directory. Optionally, in this config file, you can also set parameters for the various tools that make up this pipeline. You can use `config/config.drm.yaml` as a template.  Once the configfile is ready, run the pipeline like above:
 ```
 snakemake --use-conda --configfile config/config.sample.yaml -np
 ```
