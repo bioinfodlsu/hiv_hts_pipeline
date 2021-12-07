@@ -18,6 +18,7 @@ config['bowtie2_params_dict'] = bowtie2_params_dict
 include: "rules/bowtie2.smk"
 include: "rules/bam.smk"
 include: "rules/variant_calling.smk"
+include: "rules/hivdb_query.smk"
 
 
 #rule all:
@@ -35,8 +36,8 @@ include: "rules/variant_calling.smk"
 
 rule all:
      input:
-         expand("{out_dir}/variants/{sample_id}/paramgroup_{param_group}/variants.vcf",
+         expand("{out_dir}/variants/{sample_id}/paramgroup_{param_group}/results.txt",
                 out_dir = config['out_dir'],
                 sample_id =  config['reads'].keys(),
-                param_group=config['bowtie2_params_dict'].keys()
+                param_group = config['bowtie2_params_dict'].keys()
                )
