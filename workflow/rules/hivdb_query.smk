@@ -20,7 +20,7 @@ rule tabulate_results:
         "{0}".format(config['out_dir'])+"/variants/{sample_id}/paramgroup_{param_group}/variants.json"
 
     output:
-        "{0}".format(config['out_dir'])+"/variants/{sample_id}/paramgroup_{param_group}/results.txt"
+        "{0}".format(config['out_dir'])+"/drug_resistance_report/{sample_id}/paramgroup_{param_group}/results.txt"
 
     conda:
         "../envs/vcfToHivdb.yaml"

@@ -1,11 +1,9 @@
-#reference: /data-ss-2/data-hiv/reference/hxb2.fa
 reference: "test_data/hxb2.fasta"
 reads:
     my_sample:
         [test_data/sample_1.fastq.gz, test_data/sample_2.fastq.gz]
 
 out_dir:
-    #/data-ss-2/data-hiv/drm_alns/brazil
     test_out
 
 # parameters for Bowtie2
