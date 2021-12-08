@@ -57,13 +57,16 @@ Interpretation of drug-resistance as provided by sierrapy can be found inside th
 Intermediate files such as the read-to-reference alignments and variant calls can be found in their respective folders.
 
 # Running the pipeline on your own data
-To the run the pipeline on your own data, you need to specify in a config file the paths to the input data (reads and reference), path to the output directory. Optionally, in this config file, you can also set parameters for the various tools that make up this pipeline. You can use `config/config.drm.yaml` as a template.  Once the configfile is ready, run the pipeline like above:
+To the run the pipeline on your own data, you need to specify in a config file (in YAML format) the paths to the input data (reads and reference),
+path to the output directory. 
+Optionally, in this config file, you can also set parameters for the various tools that make up this pipeline. 
+You can use `config/config.template.yaml` as a template.  Once the configfile is ready, run the pipeline like above:
 ```
-snakemake --use-conda --configfile config/config.sample.yaml -np
+snakemake --use-conda --configfile /path/to/configfile -np
 ```
 for a dry run, and 
 ```
-snakemake --use-conda --configfile config/config.sample.yaml --cores all
+snakemake --use-conda --configfile /path/to/configfile --cores all
 ```
 for the actual run.
 
