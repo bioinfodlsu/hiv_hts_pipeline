@@ -139,7 +139,7 @@ def getMutations_mult(mut,refG):
         #print("Base:",prot[i],prot[i+1],prot[i+2])
         combinations = getCombinations(mut[i],mut[i+1], mut[i+2],ref_gene[codonct-1])
         if len(combinations)>0:
-            print("MUTATION:", codonct, ref_gene[codonct-1], "comb", combinations)
+            # print("MUTATION:", codonct, ref_gene[codonct-1], "comb", combinations)
             mutList.append([codonct,ref_gene[codonct-1],combinations])
 
         codonct = codonct + 1
@@ -152,9 +152,9 @@ def createHIVDBRequest(prot,rt,integrase, out):
     cmd = "sierrapy mutations "
     #cmd = ""
     #protease
-    print("PROT1 ",len(prot))
+    # print("PROT1 ",len(prot))
     for i in prot:
-        print("PROT: ", i)
+        # print("PROT: ", i)
         for j in i[2]:
             #print("SIERRA: " , i[0],i[1], j)
             mut = "PR:"+i[1]+str(i[0])+j
@@ -179,7 +179,7 @@ def createHIVDBRequest(prot,rt,integrase, out):
     #protStr
     #cmd = cmd + " -o "+out
     #cmd = 'sierrapy mutations PR:L10I -o output_171.json'
-    print(cmd)
+    # print(cmd)
     #print (subprocess.check_output(cmd, shell=True))
     #output = subprocess.Popen(cmd, shell=True)
     output = subprocess.check_output(cmd, shell=True)

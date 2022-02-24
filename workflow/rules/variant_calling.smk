@@ -7,6 +7,9 @@ rule lofreq:
     output:
         "{0}".format(config['out_dir'])+"/variants/{sample_id}/paramgroup_{param_group}/variants.vcf"
 
+    threads:
+        workflow.cores/len(config["reads"])
+
     conda:
         "../envs/lofreq.yaml"
 
