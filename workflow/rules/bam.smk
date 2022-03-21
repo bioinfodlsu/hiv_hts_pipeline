@@ -9,7 +9,7 @@ rule convertSAM:
     params:
         last_index_basename = "{0}/last_index/index".format(config["out_dir"])
     conda:
-        "../envs/{aligner}.yaml"
+        "../envs/last.yaml"
     shell:
         """
         samtools faidx {input.reference}

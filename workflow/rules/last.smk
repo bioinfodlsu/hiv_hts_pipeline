@@ -129,7 +129,7 @@ rule create_dict:
 rule align_last: #Rule for aligning paired-end reads to a reference genome, with score training
     input:
         unpack(get_input_align_last),
-        dict = "{0}/last_alignments/ref.dict".format(config["out_dir"]),
+        dict = "{0}".format(config["out_dir"])+"/last_alignments/{sample_id}.dict",
         scoring = "{0}/last_score_sample/scoring_scheme".format(config["out_dir"]),
         frag_len_est = "{0}".format(config["out_dir"])+"/last_alignments/{sample_id}.frag_len_est"
     params:
@@ -140,7 +140,7 @@ rule align_last: #Rule for aligning paired-end reads to a reference genome, with
     threads:
         workflow.cores/len(config["reads"])
     output:
-        "{0}".format(config['out_dir'])+"/last_alignments/{sample_id}/paramgroup_{param_group}/alns.sam"
+        temp("{0}".format(config['out_dir'])+"/last_alignments/{sample_id}/paramgroup_{param_group}/alns.sam")
     conda:
        "../envs/last.yaml"
     shell:
