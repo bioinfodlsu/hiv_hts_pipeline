@@ -15,29 +15,32 @@ for param_list in bowtie2_params[1:]:
 config['bowtie2_params_dict'] = bowtie2_params_dict
 #print(config['bowtie2_params_dict'] )
 
+# Parse LAST parameters.
+#TODO Error checks
+last_params = config["last_params"]
+last_params_group_names = last_params[1:]
+last_params_header = last_params[0]
+last_params_dict = {}
+for param_list in last_params[1:]:
+    group_name = param_list[0]
+    last_params_dict[group_name] = dict(zip(last_params_header,param_list))
+
+config['last_params_dict'] = last_params_dict
+
+
+include: "rules/filter_reads.smk"
 include: "rules/bowtie2.smk"
+include: "rules/last.smk"
 include: "rules/bam.smk"
 include: "rules/variant_calling.smk"
 include: "rules/hivdb_query.smk"
 
 
-#rule all:
-#    input:
-#        expand("{out_dir}/bowtie2_alignments/{sample_id}/paramgroup_{param_group}/alns.sorted.bam.bai",
-#                out_dir=config['out_dir'],
-#                sample_id=config["reads"].keys(),
-#                param_group=config['bowtie2_params_dict'].keys())
-
-# print(expand("{out_dir}/variants/{sample_id}/paramgroup_{param_group}/variants.vcf",
-#        out_dir = config['out_dir'],
-#        sample_id =  config['reads'].keys(),
-#        param_group=config['bowtie2_params_dict'].keys()
-#       ))
-
 rule all:
      input:
-         expand("{out_dir}/drug_resistance_report/{sample_id}/paramgroup_{param_group}/results.txt",
+         expand("{out_dir}/drug_resistance_report/{sample_id}/paramgroup_{param_group}/results_{aligner}.txt",
                 out_dir = config['out_dir'],
                 sample_id =  config['reads'].keys(),
-                param_group = config['bowtie2_params_dict'].keys()
+                aligner = config['aligner'],
+                param_group = config['{}_params_dict'.format(config['aligner'])].keys()
                )

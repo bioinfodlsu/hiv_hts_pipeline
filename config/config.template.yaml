@@ -28,6 +28,12 @@ out_dir:
     /path/to/output/folder
 
 
+#################
+## Aligner Configuration
+#################
+# Currently supports 'bowtie2' and 'last'
+aligner: bowtie2
+
 #Proceed below if you wish to edit default parameters of the different software in this pipeline.
 
 #Currently only some parameters of Bowtie2 can be specified.
@@ -45,3 +51,13 @@ bowtie2_params:
    #add more if you wish to re-run the pipeline with other parameter settings.
   ]
 
+#################
+## Parameters for LAST
+#################
+last_params:
+  [
+   ["param_group_name"], #!do not edit this!
+   #param_group_name is an arbitrary name for this parameter combination.
+   ["1"]
+   #add more if you wish to re-run the pipeline with other parameter settings.
+  ]

@@ -1,16 +1,3 @@
-
-rule index_bowtie2:
-    input:
-       reference = config["reference"]
-    output:
-       touch("{0}/bowtie2_index/index.done".format(config["out_dir"]))
-    params:
-       index_basename="{0}/bowtie2_index/index".format(config["out_dir"])
-    conda:
-       "../envs/bowtie2.yaml"
-    shell:
-       "bowtie2-build {input.reference} {params.index_basename}"
-
 # rule align_bowtie2:
 #     input:
 #         reference_flag = "{0}/bowtie2_index/index.done".format(config["out_dir"]),
@@ -30,31 +17,24 @@ rule index_bowtie2:
 #         #"{0}".format(config['out_dir'])+"/bowtie2_alignments/{sample_id}/paramgroup_{param_group}.sam | samtools view -bS - > {output}"
 #         "bowtie2 --local --{params.preset} -x {params.index_basename}  -1 {input.reads1} -2 {input.reads2} | samtools view -bS - > {output}"
 
-rule subsample_seqtk:
+rule index_bowtie2:
     input:
-        reads1 = lambda wildcards: config["reads"][wildcards.sample_id][0],
-        reads2 = lambda wildcards: config["reads"][wildcards.sample_id][1]
+       reference = config["reference"]
     output:
-        sub1 = "{0}".format(config['out_dir'])+"/subsamples/{sample_id}"+"_1_subsampled.fq",
-        sub2 = "{0}".format(config['out_dir'])+"/subsamples/{sample_id}"+"_2_subsampled.fq"
+       touch("{0}/bowtie2_index/index.done".format(config["out_dir"]))
     params:
-        n = 1000000,      # number of reads after subsampling
-        seed = 100      # seed to initialize a pseudorandom number generator
-    threads:
-        workflow.cores/len(config["reads"])
+       index_basename="{0}/bowtie2_index/index".format(config["out_dir"])
     conda:
-        "../envs/bowtie2.yaml"
+       "../envs/bowtie2.yaml"
     shell:
-        """
-        seqtk sample -s {params.seed} {input.reads1} {params.n} > {output.sub1}
-        seqtk sample -s {params.seed} {input.reads2} {params.n} > {output.sub2}
-        """
+       "bowtie2-build {input.reference} {params.index_basename}"
+
 
 rule align_bowtie2:
     input:
         reference_flag = "{0}/bowtie2_index/index.done".format(config["out_dir"]),
-        sub1 = "{0}".format(config['out_dir'])+"/subsamples/{sample_id}"+"_1_subsampled.fq",
-        sub2 = "{0}".format(config['out_dir'])+"/subsamples/{sample_id}"+"_2_subsampled.fq"
+        sub1 = "{0}".format(config['out_dir'])+"/filtered_reads/{sample_id}_1_subsampled.fq",
+        sub2 = "{0}".format(config['out_dir'])+"/filtered_reads/{sample_id}_2_subsampled.fq"
     output:
         "{0}".format(config['out_dir'])+"/bowtie2_alignments/{sample_id}/paramgroup_{param_group}/alns.bam"
     threads:
@@ -65,6 +45,4 @@ rule align_bowtie2:
     conda:
        "../envs/bowtie2.yaml"
     shell:
-        #"{0}".format(config['out_dir'])+"/bowtie2_alignments/{sample_id}/paramgroup_{param_group}.sam"
-        #"{0}".format(config['out_dir'])+"/bowtie2_alignments/{sample_id}/paramgroup_{param_group}.sam | samtools view -bS - > {output}"
         "bowtie2 --local --{params.preset} -x {params.index_basename}  -1 {input.sub1} -2 {input.sub2} | samtools view -bS - > {output}"
