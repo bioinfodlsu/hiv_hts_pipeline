@@ -6,9 +6,22 @@ reads:
 out_dir:
     test_out
 
+#################
+## Aligner Configuration
+#################
+# Currently supports 'bowtie2' and 'last'
+aligner: "bowtie2"
+
 # parameters for Bowtie2
 bowtie2_params:
   [
    ["param_group_name","preset"],
    ["1","sensitive-local"]
   ]
+
+# parameters for LAST
+# last_params:
+#   [
+#    ["param_group_name"],
+#    ["1"]
+#   ]
