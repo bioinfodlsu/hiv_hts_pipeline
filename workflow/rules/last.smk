@@ -15,13 +15,13 @@ else:
 
 #Input functions
 def get_read1(wildcards):
-    return "{}/filtered_reads/{}_1_subsampled.fq".format(config['out_dir'],wildcards.sample_id);
+    return "{}/filtered_reads/{}/{}_1_subsampled.fq".format(config['out_dir'],wildcards.sample_id,wildcards.sample_id);
 
 def get_read2(wildcards):
-    return "{}/filtered_reads/{}_2_subsampled.fq".format(config['out_dir'],wildcards.sample_id);
+    return "{}/filtered_reads/{}/{}_2_subsampled.fq".format(config['out_dir'],wildcards.sample_id,wildcards.sample_id);
 
 def getMean(wildcards):
-    est_path = "{}/last_alignments/{}.frag_len_est".format(config["out_dir"],wildcards.sample_id)
+    est_path = "{}/last_frag_stat/{}.frag_len_est".format(config["out_dir"],wildcards.sample_id)
     if(path.exists(est_path)):
         with open(est_path) as f:
             for line in f:
@@ -31,7 +31,7 @@ def getMean(wildcards):
         return(-1)
 
 def getSTD(wildcards):
-    est_path = "{}/last_alignments/{}.frag_len_est".format(config["out_dir"],wildcards.sample_id)
+    est_path = "{}/last_frag_stat/{}.frag_len_est".format(config["out_dir"],wildcards.sample_id)
     if(path.exists(est_path)):
         with open(est_path) as f:
             for line in f:
@@ -99,9 +99,9 @@ rule last_frag_stat_est: #Rule for estimating length distribution of paired-end 
         unpack(get_input_align_last)
     params:
         last_index_basename= "{0}/last_index/index".format(config["out_dir"]),
-        last_al = "{0}/last_alignments".format(config["out_dir"])
-    output :
-        frag_len_est="{0}".format(config["out_dir"])+"/last_alignments/{sample_id}.frag_len_est"
+        last_al = "{0}/last_frag_stat".format(config["out_dir"])
+    output:
+        frag_len_est="{0}".format(config["out_dir"])+"/last_frag_stat/{sample_id}.frag_len_est"
     conda:
        "../envs/last.yaml"
     shell:
@@ -120,52 +120,89 @@ rule create_dict:
     input:
         reference = config["reference"]
     output:
-       "{0}".format(config["out_dir"])+"/last_alignments/{sample_id}.dict"
+       "{0}".format(config["out_dir"])+"/filtered_reads/{sample_id}/{sample_id}.dict"
     conda:
        "../envs/last.yaml"
     shell:
        "picard CreateSequenceDictionary R={input.reference} O={output}"
 
-rule align_last: #Rule for aligning paired-end reads to a reference genome, with score training
+rule align_last_trained:
+# Rule for aligning paired-end reads to a reference genome, with score parameters provided by user.
+# It would have been nicer to incorporate this in the rule align_last, but it is too messy and hurts readability and debuggability
     input:
         unpack(get_input_align_last),
-        dict = "{0}".format(config["out_dir"])+"/last_alignments/{sample_id}.dict",
+        dict = "{0}".format(config["out_dir"])+"/filtered_reads/{sample_id}/{sample_id}.dict",
         scoring = "{0}/last_score_sample/scoring_scheme".format(config["out_dir"]),
-        frag_len_est = "{0}".format(config["out_dir"])+"/last_alignments/{sample_id}.frag_len_est"
+        frag_len_est = "{0}".format(config["out_dir"])+"/last_frag_stat/{sample_id}.frag_len_est",
     params:
         last_index_basename="{0}/last_index/index".format(config["out_dir"]),
         mean = getMean,
-        std = getSTD,
-        #scoring = getScoring,
+        std = getSTD
     threads:
         workflow.cores/len(config["reads"])
     output:
-        temp("{0}".format(config['out_dir'])+"/last_alignments/{sample_id}/paramgroup_{param_group}/alns.sam")
+        "{0}".format(config['out_dir'])+"/last_trained_alignments/{country}/{sample_id}/paramgroup_{param_group}/alns.sam"
     conda:
        "../envs/last.yaml"
     shell:
-        """
+         """
         fastq-interleave {input.reads1} {input.reads2} |
         lastal -Q1 -i1 -p {input.scoring} {params.last_index_basename} |
         last-pair-probs -f {params.mean} -s {params.std} -m 0.01 -d 0.1 |
         maf-convert sam -f {input.dict} > {output}
         """
+    
+rule align_last: #Rule for aligning paired-end reads to a reference genome, with score training
+    input:
+        unpack(get_input_align_last),
+        dict = "{0}".format(config["out_dir"])+"/filtered_reads/{sample_id}/{sample_id}.dict",
+        scoring = "{0}/last_score_sample/scoring_scheme".format(config["out_dir"]),
+        frag_len_est = "{0}".format(config["out_dir"])+"/last_frag_stat/{sample_id}.frag_len_est"
+    params:
+        last_index_basename="{0}/last_index/index".format(config["out_dir"]),
+        mean = getMean,
+        std = getSTD,
+        fromParamsFile = lambda wildcards: config["last_params_dict"][wildcards.param_group]
+        # fromParamsFile=last_paramspace.instance
+    threads:
+        workflow.cores/len(config["reads"])
+    output:
+        "{0}".format(config['out_dir'])+"/last_alignments/{country}/{sample_id}/paramgroup_{param_group}/alns.sam"
+    conda:
+        "../envs/last.yaml"
+    shell:
+        """
+        fastq-interleave {input.reads1} {input.reads2} |
+        lastal -Q1 -i1 -r {params.fromParamsFile[match]} -q {params.fromParamsFile[mismatch]} -a {params.fromParamsFile[gapOpen]} -b {params.fromParamsFile[gapExtend]} {params.last_index_basename} |
+        last-pair-probs -f {params.mean} -s {params.std} -m 0.01 -d 0.1 |
+        maf-convert sam -f {input.dict} > {output}
+        """
 
-# rule align_last_paramsFromFile:
+
+# rule align_last_trained:
 # # Rule for aligning paired-end reads to a reference genome, with score parameters provided by user.
 # # It would have been nicer to incorporate this in the rule align_last, but it is too messy and hurts readability and debuggability
 #     input:
 #         unpack(get_input_align_last),
-#         frag_len_est = "{0}/last_alignments/{{sample_id}}.frag_len_est".format(config["out_dir"])
+#         dict = "{0}".format(config["out_dir"])+"/last_alignments/{sample_id}.dict",
+#         scoring = "{0}/last_score_sample/scoring_scheme".format(config["out_dir"]),
+#         frag_len_est = "{0}".format(config["out_dir"])+"/last_trained_alignments/{sample_id}.frag_len_est",
 #     params:
 #         last_index_basename="{0}/last_index/index".format(config["out_dir"]),
 #         mean = getMean,
 #         std = getSTD,
-#         fromParamsFile=last_paramspace.instance
+#         fromParamsFile = lambda wildcards: config["last_params_dict"][wildcards.param_group]
+#         # fromParamsFile=last_paramspace.instance
+#     threads:
+#         workflow.cores/len(config["reads"])
 #     output:
-#         "{0}".format(config['out_dir'])+"/last_alignments/{sample_id}/"+"{last_paramspace.wildcard_pattern}/alns.tab"
+#         "{0}".format(config['out_dir'])+"/last_trained_alignments/{sample_id}/"+"{last_paramspace.wildcard_pattern}/alns.sam"
+#     conda:
+#        "../envs/last.yaml"
 #     shell:
-#         "fastq-interleave {input.reads1} {input.reads2} | "
-#         "lastal -Q1 -i1 -r {params.fromParamsFile[match]} -q {params.fromParamsFile[mismatch]} -a {params.fromParamsFile[gapOpen]} -b {params.fromParamsFile[gapExtend]} {params.last_index_basename} |"
-#         "last-pair-probs -f {params.mean} -s {params.std} -m 0.01 -d 0.1 |"
-#         "maf-convert tab > {output}"
+#         """
+#         fastq-interleave {input.reads1} {input.reads2} |
+#         lastal -Q1 -i1 -r {params.fromParamsFile[match]} -q {params.fromParamsFile[mismatch]} -a {params.fromParamsFile[gapOpen]} -b {params.fromParamsFile[gapExtend]} {params.last_index_basename} |
+#         last-pair-probs -f {params.mean} -s {params.std} -m 0.01 -d 0.1 |
+#         maf-convert sam -f {input.dict} > {output}
+#         """

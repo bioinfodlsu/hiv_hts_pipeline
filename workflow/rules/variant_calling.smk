@@ -1,10 +1,10 @@
 rule variants_lofreq:
     input:
         reference = config["reference"],
-        bam = "{0}".format(config['out_dir'])+"/{aligner}_alignments/{sample_id}/paramgroup_{param_group}/alns.sorted.bam",
-        bai = "{0}".format(config['out_dir'])+"/{aligner}_alignments/{sample_id}/paramgroup_{param_group}/alns.sorted.bam.bai"
+        bam = "{0}".format(config['out_dir'])+"/{aligner}_alignments/{country}/{sample_id}/paramgroup_{param_group}/alns.sorted.bam",
+        bai = "{0}".format(config['out_dir'])+"/{aligner}_alignments/{country}/{sample_id}/paramgroup_{param_group}/alns.sorted.bam.bai"
     output:
-        "{0}".format(config['out_dir'])+"/variants/{sample_id}/paramgroup_{param_group}/variants_{aligner}.vcf"
+        "{0}".format(config['out_dir'])+"/variants/{country}/{sample_id}/paramgroup_{param_group}/variants_{aligner}.vcf"
     threads:
         workflow.cores/len(config["reads"])
     conda:

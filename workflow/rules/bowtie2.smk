@@ -33,10 +33,10 @@ rule index_bowtie2:
 rule align_bowtie2:
     input:
         reference_flag = "{0}/bowtie2_index/index.done".format(config["out_dir"]),
-        sub1 = "{0}".format(config['out_dir'])+"/filtered_reads/{sample_id}_1_subsampled.fq",
-        sub2 = "{0}".format(config['out_dir'])+"/filtered_reads/{sample_id}_2_subsampled.fq"
+        sub1 = "{0}".format(config['out_dir'])+"/filtered_reads/{sample_id}/{sample_id}_1_subsampled.fq",
+        sub2 = "{0}".format(config['out_dir'])+"/filtered_reads/{sample_id}/{sample_id}_2_subsampled.fq"
     output:
-        "{0}".format(config['out_dir'])+"/bowtie2_alignments/{sample_id}/paramgroup_{param_group}/alns.bam"
+        "{0}".format(config['out_dir'])+"/bowtie2_alignments/{country}/{sample_id}/paramgroup_{param_group}/alns.bam"
     threads:
         workflow.cores/len(config["reads"])
     params:
