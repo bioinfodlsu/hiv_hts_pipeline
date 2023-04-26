@@ -1,0 +1,5 @@
+name: blast
+channels:
+  - conda-forge
+  - bioconda
+  - defaults

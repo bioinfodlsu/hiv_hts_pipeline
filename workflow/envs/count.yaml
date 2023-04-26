@@ -1,0 +1,12 @@
+name: count
+channels:
+  - conda-forge
+  - bioconda
+  - defaults
+dependencies:
+    - python=3.10
+    - pandas
+    - samtools=1.13
+    - matplotlib=3.5.1
+    - ipython=8.2.0
+    - seaborn

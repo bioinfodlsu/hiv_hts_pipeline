@@ -1,7 +1,9 @@
+name: bowtie2
 channels:
-    - conda-forge
-    - bioconda
+  - conda-forge
+  - bioconda
+  - defaults
 dependencies:
     - bowtie2=2.2.5
     - samtools=1.13
-    - seqtk==1.3
+    - seqtk=1.3
