@@ -11,6 +11,7 @@ out = open(args.outFile, "w")
 out.write("Sample ID\tParameters\tTotal Mapped\tTotal Unmapped\tTotal Reads\tAlignment Percentage\n")
 
 results = []
+reads = {}
 for f in args.inFile:
 
     # cmd = "samtools flagstat " + f
@@ -25,13 +26,18 @@ for f in args.inFile:
     cmd_output = subprocess.check_output(cmd, shell=True)
     mapped_count = cmd_output.decode("utf-8").strip()
 
-    cmd = "samtools view -c -f 4 " + f
-    cmd_output = subprocess.check_output(cmd, shell=True)
-    unmapped_count = cmd_output.decode("utf-8").strip() 
-
-    cmd = "samtools view -c " + f
+    if "bowtie2" not in f:
+        file = f.replace("last_trained", "bowtie2") if "last_trained" in f else f.replace("last", "bowtie2")
+        # print(f)
+        # print(file)
+        cmd = "samtools view -c " + file
+    else:
+        cmd = "samtools view -c " + f
+    
     cmd_output = subprocess.check_output(cmd, shell=True)
     alns_count = cmd_output.decode("utf-8").strip()
+
+    unmapped_count = str(int(alns_count) - int(mapped_count))
 
     aln_pct = '%.3f'%(float(mapped_count)/float(alns_count)*100)
 
