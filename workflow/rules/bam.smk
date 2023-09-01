@@ -1,9 +1,9 @@
 rule convertSAM:
     input:
         reference = config["reference"],
-        sam = "{0}".format(config['out_dir'])+"/last_alignments/{country}/{sample_id}/paramgroup_{param_group}/alns.sam"
+        sam = "{0}".format(config['out_dir'])+"/last_alignments/{country}/{sample_id}_to_{reference_name}/paramgroup_{param_group}/alns.sam"
     output:
-        "{0}".format(config['out_dir'])+"/last_alignments/{country}/{sample_id}/paramgroup_{param_group}/alns.bam"
+        "{0}".format(config['out_dir'])+"/last_alignments/{country}/{sample_id}_to_{reference_name}/paramgroup_{param_group}/alns.bam"
     threads:
         workflow.cores/len(config["reads"])
     params:
@@ -19,9 +19,9 @@ rule convertSAM:
 rule convertSAM_trained:
     input:
         reference = config["reference"],
-        sam = "{0}".format(config['out_dir'])+"/last_trained_alignments/{country}/{sample_id}/paramgroup_{param_group}/alns.sam"
+        sam = "{0}".format(config['out_dir'])+"/last_trained_alignments/{country}/{sample_id}_to_{reference_name}/paramgroup_{param_group}/alns.sam"
     output:
-        "{0}".format(config['out_dir'])+"/last_trained_alignments/{country}/{sample_id}/paramgroup_{param_group}/alns.bam"
+        "{0}".format(config['out_dir'])+"/last_trained_alignments/{country}/{sample_id}_to_{reference_name}/paramgroup_{param_group}/alns.bam"
     threads:
         workflow.cores/len(config["reads"])
     params:
@@ -37,9 +37,9 @@ rule convertSAM_trained:
 rule convertBAM:
     input:
         reference = config["reference"],
-        bam = "{0}".format(config['out_dir'])+"/bowtie2_alignments/{country}/{sample_id}/paramgroup_{param_group}/alns.bam"
+        bam = "{0}".format(config['out_dir'])+"/bowtie2_alignments/{country}/{sample_id}_to_{reference_name}/paramgroup_{param_group}/alns.bam"
     output:
-        "{0}".format(config['out_dir'])+"/bowtie2_alignments/{country}/{sample_id}/paramgroup_{param_group}/alns.sam"
+        "{0}".format(config['out_dir'])+"/bowtie2_alignments/{country}/{sample_id}_to_{reference_name}/paramgroup_{param_group}/alns.sam"
     threads:
         workflow.cores/len(config["reads"])
     conda:
@@ -52,9 +52,9 @@ rule convertBAM:
 
 rule sortBAM:
     input:
-        "{0}".format(config['out_dir'])+"/last_alignments/{country}/{sample_id}/paramgroup_{param_group}/alns.bam"
+        "{0}".format(config['out_dir'])+"/last_alignments/{country}/{sample_id}_to_{reference_name}/paramgroup_{param_group}/alns.bam"
     output:
-        "{0}".format(config['out_dir'])+"/last_alignments/{country}/{sample_id}/paramgroup_{param_group}/alns.sorted.bam"
+        "{0}".format(config['out_dir'])+"/last_alignments/{country}/{sample_id}_to_{reference_name}/paramgroup_{param_group}/alns.sorted.bam"
     conda:
         "../envs/last.yaml"
     shell:
@@ -62,9 +62,9 @@ rule sortBAM:
 
 rule sortSAM:
     input:
-        "{0}".format(config['out_dir'])+"/last_alignments/{country}/{sample_id}/paramgroup_{param_group}/alns.sam"
+        "{0}".format(config['out_dir'])+"/last_alignments/{country}/{sample_id}_to_{reference_name}/paramgroup_{param_group}/alns.sam"
     output:
-        "{0}".format(config['out_dir'])+"/last_alignments/{country}/{sample_id}/paramgroup_{param_group}/alns.sorted.sam"
+        "{0}".format(config['out_dir'])+"/last_alignments/{country}/{sample_id}_to_{reference_name}/paramgroup_{param_group}/alns.sorted.sam"
     conda:
         "../envs/last.yaml"
     shell:
@@ -72,9 +72,9 @@ rule sortSAM:
 
 rule sortSAM_trained:
     input:
-        "{0}".format(config['out_dir'])+"/last_trained_alignments/{country}/{sample_id}/paramgroup_{param_group}/alns.sam"
+        "{0}".format(config['out_dir'])+"/last_trained_alignments/{country}/{sample_id}_to_{reference_name}/paramgroup_{param_group}/alns.sam"
     output:
-        "{0}".format(config['out_dir'])+"/last_trained_alignments/{country}/{sample_id}/paramgroup_{param_group}/alns.sorted.sam"
+        "{0}".format(config['out_dir'])+"/last_trained_alignments/{country}/{sample_id}_to_{reference_name}/paramgroup_{param_group}/alns.sorted.sam"
     conda:
         "../envs/last.yaml"
     shell:
@@ -82,9 +82,9 @@ rule sortSAM_trained:
 
 rule indexBAM:
     input:
-        "{0}".format(config['out_dir'])+"/{aligner}_alignments/{country}/{sample_id}/paramgroup_{param_group}/alns.sorted.bam"
+        "{0}".format(config['out_dir'])+"/{aligner}_alignments/{country}/{sample_id}_to_{reference_name}/paramgroup_{param_group}/alns.sorted.bam"
     output:
-        "{0}".format(config['out_dir'])+"/{aligner}_alignments/{country}/{sample_id}/paramgroup_{param_group}/alns.sorted.bam.bai"
+        "{0}".format(config['out_dir'])+"/{aligner}_alignments/{country}/{sample_id}_to_{reference_name}/paramgroup_{param_group}/alns.sorted.bam.bai"
     conda:
         "../envs/{aligner}.yaml"
     shell:

@@ -19,7 +19,7 @@ rule align_blast:
         sub1 = "{0}".format(config['out_dir'])+"/filtered_reads/{sample_id}/{sample_id}_1_subsampled.fq",
         sub2 = "{0}".format(config['out_dir'])+"/filtered_reads/{sample_id}/{sample_id}_2_subsampled.fq"
     output:
-        "{0}".format(config["out_dir"])+"/blast_alignments/{country}/{sample_id}/paramgroup_{param_group}/alns.sam"
+        "{0}".format(config["out_dir"])+"/blast_alignments/{country}/{sample_id}_to_{reference_name}/paramgroup_{param_group}/alns.sam"
     params:
         index_basename = "{0}/blast_index/index".format(config["out_dir"]),
         evalue = 10e-25,
