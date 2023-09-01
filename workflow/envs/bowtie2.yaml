@@ -1,9 +1,10 @@
 name: bowtie2
 channels:
+  - defaults
   - conda-forge
   - bioconda
-  - defaults
 dependencies:
-    - bowtie2=2.2.5
-    - samtools=1.13
-    - seqtk=1.3
+  - bowtie2=2.2.5
+  - samtools=1.13
+  - seqtk=1.3
+prefix: /Users/kimwilliamelee/miniforge3/envs/bowtie2

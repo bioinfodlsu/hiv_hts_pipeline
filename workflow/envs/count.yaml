@@ -1,4 +1,3 @@
-name: count
 channels:
   - conda-forge
   - bioconda
