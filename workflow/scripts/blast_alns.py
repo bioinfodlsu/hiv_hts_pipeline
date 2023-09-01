@@ -30,9 +30,10 @@ def compare_alns(blast, aligner):
     incorrect = 0
     total = 0
     mapped = 0
+    unmapped = 0
 
     for read in samfile.fetch():
-        if not read.is_unmapped:
+        if read.is_mapped:
             row = []
             key = ""
             if read.flag < 128: # is first pair
@@ -68,15 +69,20 @@ def compare_alns(blast, aligner):
                 result_s = get_overlap(qlist, slist)
 
                 # print(result_q, result_s, "\n")
-                if result_q > 0.9 and result_s > 0.9:
+                if result_q >= 0.95 and result_s >= 0.95:
                     correct = correct + 1
                 else:
                     incorrect = incorrect + 1
+
+        else:
+            unmapped += 1
             
         total+=1
         if total >= len(blast[3]):
             break
-    
+    print("Unmapped: ", unmapped)
+    print("Mapped: ", mapped)
+    print("Total: ", total)
     x = 1.0 * incorrect/mapped
     y = 1.0 * correct/mapped
     
@@ -140,21 +146,21 @@ if __name__ == '__main__':
     for i in range(len(blast)):
         # blast vs last
         x, y = compare_alns(blast[i], last[i])
-        out.write(str(x) + '\t' + str(y) + '\t' + last[i][0] + '\t' + last[i][2] + '\t' + last[i][4])
+        out.write(str(x) + '\t' + str(y) + '\t' + last[i][0] + '\t' + "LAST" + '\t' + last[i][4])
         out.write('\n')
         # blast_last_x.append(x)
         # blast_last_y.append(y)
 
         # blast vs last trained
         x, y = compare_alns(blast[i], last_trained[i])
-        out.write(str(x) + '\t' + str(y) + '\t' + last_trained[i][0] + '\t' + last_trained[i][2] + '\t' + last_trained[i][4])
+        out.write(str(x) + '\t' + str(y) + '\t' + last_trained[i][0] + '\t' + "LAST (trained)" + '\t' + last_trained[i][4])
         out.write('\n')
         # blast_lasttrained_x.append(x)
         # blast_lasttrained_y.append(y)
 
         # blast vs bowtie2
         x, y = compare_alns(blast[i], bowtie2[i])
-        out.write(str(x) + '\t' + str(y) + '\t' + bowtie2[i][0] + '\t' + bowtie2[i][2] + '\t' + bowtie2[i][4])
+        out.write(str(x) + '\t' + str(y) + '\t' + bowtie2[i][0] + '\t' + "Bowtie2" + '\t' + bowtie2[i][4])
         out.write('\n')
         # blast_bowtie_x.append(x)
         # blast_bowtie_y.append(y)
