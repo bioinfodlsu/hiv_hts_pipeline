@@ -1,0 +1,11 @@
+       Country Sample ID  Total Mapped  Total Unmapped  Total Reads  Alignment Percentage         aligner
+0  Philippines  HIV2-157       1470169          529831      2000000               100.000            LAST
+1  Philippines  HIV2-171       1628442          371558      2000000               100.000            LAST
+2  Philippines  HIV2-174       1751545          248455      2000000               100.000            LAST
+0  Philippines  HIV2-157       1598011          401989      2000000               100.000  LAST (trained)
+1  Philippines  HIV2-171       1747378          252622      2000000               100.000  LAST (trained)
+2  Philippines  HIV2-174       1776315          223685      2000000               100.000  LAST (trained)
+0  Philippines  HIV2-157        559428         1440572      2000000                27.971         Bowtie2
+1  Philippines  HIV2-171        625367         1374633      2000000                31.268         Bowtie2
+2  Philippines  HIV2-174       1465771          534229      2000000                73.289         Bowtie2
+
