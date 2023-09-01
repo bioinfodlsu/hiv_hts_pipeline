@@ -7,3 +7,4 @@ test_data/nicaragua
 test_data/puerto_rico
 test_out
 *.fai
+.DS_Store
