@@ -12,41 +12,37 @@
 #Reference
 reference:
     "test_data/hxb2.fasta"
-    # "test_data/CRF01_AE.fasta"
-    # "test_data/subtypeB.fasta"
     
 reference_name:
     # "subtypeB"
     # "subtype01_AE"
     # "subtype02_AG"
-    "HXB2"
-    # "CRF01_AE"
+    "hxb2"
 
 hxb2:
-    "test_data/hxb2.fasta"
     # "test_data/subtypeB.fasta"
     # "test_data/subtype01_AE.fasta"
-    # "test_data/subtype02_AG.fasta"
+    "test_data/subtype02_AG.fasta"
 
 virus_gen:
     "ref_viruses_rep_genomes"
 
 # Geographic Location
 country:
-    "Nicaragua"
+    "Germany"
 
 # Reads
 reads:
-    SRR4071737: #You can change the name of the sample.
-        ["test_data/nicaragua/SRR4071737/SRR4071737_1.fastq.gz", "test_data/nicaragua/SRR4071737/SRR4071737_2.fastq.gz"]
-    SRR4071738:
-        ["test_data/nicaragua/SRR4071738/SRR4071738_1.fastq.gz", "test_data/nicaragua/SRR4071738/SRR4071738_2.fastq.gz"]
-    # SRR4071739:
-        # ["test_data/nicaragua/SRR4071739/SRR4071739_1.fastq.gz", "test_data/nicaragua/SRR4071739/SRR4071739_2.fastq.gz"]
-    SRR4071740:
-        ["test_data/nicaragua/SRR4071740/SRR4071740_1.fastq.gz", "test_data/nicaragua/SRR4071740/SRR4071740_2.fastq.gz"]
-    # SRR4071741:
-        # ["test_data/nicaragua/SRR4071741/SRR4071741_1.fastq.gz", "test_data/nicaragua/SRR4071741/SRR4071741_2.fastq.gz"]
+    ERR9814511: #You can change the name of the sample.
+        ["test_data/germany/ERR9814511/ERR9814511_1.fastq.gz", "test_data/germany/ERR9814511/ERR9814511_2.fastq.gz"]
+    ERR9814512:
+        ["test_data/germany/ERR9814512/ERR9814512_1.fastq.gz", "test_data/germany/ERR9814512/ERR9814512_2.fastq.gz"]
+    ERR9814513:
+        ["test_data/germany/ERR9814513/ERR9814513_1.fastq.gz", "test_data/germany/ERR9814513/ERR9814513_2.fastq.gz"]
+    # ERR9814514:
+    #     ["test_data/germany/ERR9814514/ERR9814514_1.fastq.gz", "test_data/germany/ERR9814514/ERR9814514_2.fastq.gz"]
+    # ERR9814515:
+    #     ["test_data/germany/ERR9814515/ERR9814515_1.fastq.gz", "test_data/germany/ERR9814515/ERR9814515_2.fastq.gz"]
 
 out_dir:
     "test_out"
@@ -81,7 +77,7 @@ bowtie2_params:
 last_params:
   [
    ["param_group_name","match","mismatch","gapOpen","gapExtend"],
-   ["1", 6, 18, 21, 9]
+   ["1",2,3,5,2]
    #add more if you wish to re-run the pipeline with other parameter settings.
   ]
 

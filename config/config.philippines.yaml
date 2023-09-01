@@ -13,7 +13,6 @@
 reference:
     "test_data/hxb2.fasta"
     # "test_data/CRF01_AE.fasta"
-    # "test_data/subtypeB.fasta"
     
 reference_name:
     # "subtypeB"
@@ -33,20 +32,20 @@ virus_gen:
 
 # Geographic Location
 country:
-    "Nicaragua"
+    "Philippines"
 
 # Reads
 reads:
-    SRR4071737: #You can change the name of the sample.
-        ["test_data/nicaragua/SRR4071737/SRR4071737_1.fastq.gz", "test_data/nicaragua/SRR4071737/SRR4071737_2.fastq.gz"]
-    SRR4071738:
-        ["test_data/nicaragua/SRR4071738/SRR4071738_1.fastq.gz", "test_data/nicaragua/SRR4071738/SRR4071738_2.fastq.gz"]
-    # SRR4071739:
-        # ["test_data/nicaragua/SRR4071739/SRR4071739_1.fastq.gz", "test_data/nicaragua/SRR4071739/SRR4071739_2.fastq.gz"]
-    SRR4071740:
-        ["test_data/nicaragua/SRR4071740/SRR4071740_1.fastq.gz", "test_data/nicaragua/SRR4071740/SRR4071740_2.fastq.gz"]
-    # SRR4071741:
-        # ["test_data/nicaragua/SRR4071741/SRR4071741_1.fastq.gz", "test_data/nicaragua/SRR4071741/SRR4071741_2.fastq.gz"]
+    HIV2-157: #You can change the name of the sample.
+        ["test_data/philippines/HIV2-157/HIV2-157_1.fastq.gz", "test_data/philippines/HIV2-157/HIV2-157_2.fastq.gz"]
+    HIV2-171:
+        ["test_data/philippines/HIV2-171/HIV2-171_1.fastq.gz", "test_data/philippines/HIV2-171/HIV2-171_2.fastq.gz"]
+    HIV2-174: 
+        ["test_data/philippines/HIV2-174/HIV2-174_1.fastq.gz", "test_data/philippines/HIV2-174/HIV2-174_2.fastq.gz"]
+    # HIV2-184: 
+        # ["test_data/philippines/HIV2-184/HIV2-184_1.fastq.gz", "test_data/philippines/HIV2-184/HIV2-184_2.fastq.gz"]
+    # HIV2-188:
+        # ["test_data/philippines/HIV2-188/HIV2-188_1.fastq.gz", "test_data/philippines/HIV2-188/HIV2-188_2.fastq.gz"]
 
 out_dir:
     "test_out"

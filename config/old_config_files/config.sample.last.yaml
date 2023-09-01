@@ -10,14 +10,7 @@ out_dir:
 ## Aligner Configuration
 #################
 # Currently supports 'bowtie2' and 'last'
-aligner: "bowtie2"
-
-# parameters for Bowtie2
-bowtie2_params:
-  [
-   ["param_group_name","preset"],
-   ["1","sensitive-local"]
-  ]
+aligner: "last"
 
 # parameters for LAST
 last_params:

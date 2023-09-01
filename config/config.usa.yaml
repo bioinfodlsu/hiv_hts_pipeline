@@ -12,41 +12,45 @@
 #Reference
 reference:
     "test_data/hxb2.fasta"
-    # "test_data/CRF01_AE.fasta"
-    # "test_data/subtypeB.fasta"
     
 reference_name:
     # "subtypeB"
     # "subtype01_AE"
     # "subtype02_AG"
-    "HXB2"
-    # "CRF01_AE"
+    "hxb2"
 
 hxb2:
-    "test_data/hxb2.fasta"
     # "test_data/subtypeB.fasta"
     # "test_data/subtype01_AE.fasta"
-    # "test_data/subtype02_AG.fasta"
+    "test_data/subtype02_AG.fasta"
 
 virus_gen:
     "ref_viruses_rep_genomes"
 
 # Geographic Location
 country:
-    "Nicaragua"
+    "USA"
 
 # Reads
 reads:
-    SRR4071737: #You can change the name of the sample.
-        ["test_data/nicaragua/SRR4071737/SRR4071737_1.fastq.gz", "test_data/nicaragua/SRR4071737/SRR4071737_2.fastq.gz"]
-    SRR4071738:
-        ["test_data/nicaragua/SRR4071738/SRR4071738_1.fastq.gz", "test_data/nicaragua/SRR4071738/SRR4071738_2.fastq.gz"]
-    # SRR4071739:
-        # ["test_data/nicaragua/SRR4071739/SRR4071739_1.fastq.gz", "test_data/nicaragua/SRR4071739/SRR4071739_2.fastq.gz"]
-    SRR4071740:
-        ["test_data/nicaragua/SRR4071740/SRR4071740_1.fastq.gz", "test_data/nicaragua/SRR4071740/SRR4071740_2.fastq.gz"]
-    # SRR4071741:
-        # ["test_data/nicaragua/SRR4071741/SRR4071741_1.fastq.gz", "test_data/nicaragua/SRR4071741/SRR4071741_2.fastq.gz"]
+    SRR2071325: #You can change the name of the sample.
+        ["test_data/usa/SRR2071325/SRR2071325_1.fastq.gz", "test_data/usa/SRR2071325/SRR2071325_2.fastq.gz"]
+    # SRR2071389:
+    #     ["test_data/usa/SRR2071389/SRR2071389_1.fastq.gz", "test_data/usa/SRR2071389/SRR2071389_2.fastq.gz"]
+    # SRR2071398:
+    #     ["test_data/usa/SRR2071398/SRR2071398_1.fastq.gz", "test_data/usa/SRR2071398/SRR2071398_2.fastq.gz"]
+    SRR2071411:
+        ["test_data/usa/SRR2071411/SRR2071411_1.fastq.gz", "test_data/usa/SRR2071411/SRR2071411_2.fastq.gz"]
+    # SRR2071413:
+    #     ["test_data/usa/SRR2071413/SRR2071413_1.fastq.gz", "test_data/usa/SRR2071413/SRR2071413_2.fastq.gz"]
+    SRR2071414:
+        ["test_data/usa/SRR2071414/SRR2071414_1.fastq.gz", "test_data/usa/SRR2071414/SRR2071414_2.fastq.gz"]
+    SRR2071419:
+        ["test_data/usa/SRR2071419/SRR2071419_1.fastq.gz", "test_data/usa/SRR2071419/SRR2071419_2.fastq.gz"]
+    SRR2071420:
+        ["test_data/usa/SRR2071420/SRR2071420_1.fastq.gz", "test_data/usa/SRR2071420/SRR2071420_2.fastq.gz"]
+    SRR2071422:
+        ["test_data/usa/SRR2071422/SRR2071422_1.fastq.gz", "test_data/usa/SRR2071422/SRR2071422_2.fastq.gz"]
 
 out_dir:
     "test_out"
@@ -81,7 +85,7 @@ bowtie2_params:
 last_params:
   [
    ["param_group_name","match","mismatch","gapOpen","gapExtend"],
-   ["1", 6, 18, 21, 9]
+   ["1",2,3,5,2]
    #add more if you wish to re-run the pipeline with other parameter settings.
   ]
 

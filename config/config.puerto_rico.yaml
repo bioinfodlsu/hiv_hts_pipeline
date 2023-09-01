@@ -11,15 +11,15 @@
 
 #Reference
 reference:
-    "test_data/hxb2.fasta"
+    # "test_data/hxb2.fasta"
     # "test_data/CRF01_AE.fasta"
-    # "test_data/subtypeB.fasta"
+    "test_data/subtypeB.fasta"
     
 reference_name:
-    # "subtypeB"
+    "subtypeB"
     # "subtype01_AE"
     # "subtype02_AG"
-    "HXB2"
+    # "hxb2"
     # "CRF01_AE"
 
 hxb2:
@@ -33,20 +33,20 @@ virus_gen:
 
 # Geographic Location
 country:
-    "Nicaragua"
+    "Puerto_Rico"
 
 # Reads
 reads:
-    SRR4071737: #You can change the name of the sample.
-        ["test_data/nicaragua/SRR4071737/SRR4071737_1.fastq.gz", "test_data/nicaragua/SRR4071737/SRR4071737_2.fastq.gz"]
-    SRR4071738:
-        ["test_data/nicaragua/SRR4071738/SRR4071738_1.fastq.gz", "test_data/nicaragua/SRR4071738/SRR4071738_2.fastq.gz"]
-    # SRR4071739:
-        # ["test_data/nicaragua/SRR4071739/SRR4071739_1.fastq.gz", "test_data/nicaragua/SRR4071739/SRR4071739_2.fastq.gz"]
-    SRR4071740:
-        ["test_data/nicaragua/SRR4071740/SRR4071740_1.fastq.gz", "test_data/nicaragua/SRR4071740/SRR4071740_2.fastq.gz"]
-    # SRR4071741:
-        # ["test_data/nicaragua/SRR4071741/SRR4071741_1.fastq.gz", "test_data/nicaragua/SRR4071741/SRR4071741_2.fastq.gz"]
+    # SRR7467888: #You can change the name of the sample.
+    #     ["test_data/puerto_rico/SRR7467888/SRR7467888_1.fastq.gz", "test_data/puerto_rico/SRR7467888/SRR7467888_2.fastq.gz"]
+    # SRR7467889:
+    #     ["test_data/puerto_rico/SRR7467889/SRR7467889_1.fastq.gz", "test_data/puerto_rico/SRR7467889/SRR7467889_2.fastq.gz"]
+    SRR7467890:
+        ["test_data/puerto_rico/SRR7467890/SRR7467890_1.fastq.gz", "test_data/puerto_rico/SRR7467890/SRR7467890_2.fastq.gz"]
+    SRR7467891:
+        ["test_data/puerto_rico/SRR7467891/SRR7467891_1.fastq.gz", "test_data/puerto_rico/SRR7467891/SRR7467891_2.fastq.gz"]
+    SRR7467892:
+        ["test_data/puerto_rico/SRR7467892/SRR7467892_1.fastq.gz", "test_data/puerto_rico/SRR7467892/SRR7467892_2.fastq.gz"]
 
 out_dir:
     "test_out"
