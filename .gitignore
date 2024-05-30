@@ -1,0 +1,19 @@
+.snakemake
+hiv.code-workspace
+test_data
+test_data/brazil
+test_data/philippines
+test_data/nagoya
+test_data/nicaragua
+test_data/puerto_rico
+test_data/phase_two
+test_data/minvar
+test_data/minvar_mix_panel.txt
+test_out
+*.fai
+.DS_Store
+viral_mixes.md
+dump
+config/test_configs
+test_data/hxb2_gene_annotation.bed
+workflow/Snakefile copy
