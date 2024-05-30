@@ -26,21 +26,144 @@ for param_list in last_params[1:]:
     last_params_dict[group_name] = dict(zip(last_params_header,param_list))
 
 config['last_params_dict'] = last_params_dict
+# print(config['last_params_dict'] )
+
+lofreq_params = config["lofreq_params"]
+lofreq_params_group_names = lofreq_params[0][1:]
+lofreq_params_header = lofreq_params[0]
+lofreq_params_dict = {}
+
+for param_list in lofreq_params[1:]:
+    group_name = param_list[0]
+    lofreq_params_dict[group_name] = dict(zip(lofreq_params_header[1:], param_list[1:]))
+
+config['lofreq_params_dict'] = lofreq_params_dict
 
 
+include: "rules/count_alns.smk"
 include: "rules/filter_reads.smk"
 include: "rules/bowtie2.smk"
 include: "rules/last.smk"
 include: "rules/bam.smk"
 include: "rules/variant_calling.smk"
 include: "rules/hivdb_query.smk"
+include: "rules/blast.smk"
+# include: "rules/map_to_hxb2.smk"
+include: "rules/aavf.smk"
 
-
+# Rule to generate drug resistance report
 rule all:
      input:
-         expand("{out_dir}/drug_resistance_report/{sample_id}/paramgroup_{param_group}/results_{aligner}.txt",
+         expand("{out_dir}/drug_resistance_report/{country}/{sample_id}_to_{reference_name}/paramgroup_{param_group}/results_{aligner}.txt",
                 out_dir = config['out_dir'],
+                reference_name = config['reference_name'],
                 sample_id =  config['reads'].keys(),
                 aligner = config['aligner'],
-                param_group = config['{}_params_dict'.format(config['aligner'])].keys()
-               )
+                country = config['country'],
+                param_group = config['last_params_dict'].keys()
+            )
+
+
+# LAST TRAINED Rule to generate drug resistance report
+# rule all:
+    #  input:
+    #      expand("{out_dir}/drug_resistance_report/{country}/{sample_id}_to_{reference_name}/paramgroup_{param_group}/results_{aligner}_{lofreq_param_group}.txt",
+    #             out_dir = config['out_dir'],
+    #             reference_name = config['reference_name'],
+    #             sample_id =  config['reads'].keys(),
+    #             aligner = config['aligner'],
+    #             country = config['country'],
+    #             param_group = config['last_params_dict'].keys(),
+    #             lofreq_param_group = config['lofreq_params_dict'].keys()
+    #         )
+
+# MINVAR
+# rule all:
+#      input:
+#          expand("{out_dir}/variants/{country}/{sample_id}_to_{reference_name}/paramgroup_{param_group}/variants_{aligner}.vcf",
+#                  out_dir = config['out_dir'],
+#                 reference_name = config['reference_name'],
+#                 sample_id =  config['reads'].keys(),
+#                 aligner = config['aligner'],
+#                 country = config['country'],
+#                 param_group = config['{}_params_dict'.format(config['aligner'])].keys(),
+#                 lofreq_param_group = config['lofreq_params_dict'].keys()
+#             )
+
+# rule all:               
+    # input:
+    #     expand("{out_dir}/alignment_analysis/to_{reference_name}/plot_alns_{country}.tsv",
+    #             out_dir = config['out_dir'],
+    #             reference_name = config['reference_name'],
+    #             sample_id =  config['reads'].keys(),
+    #             aligner = config['aligner'],
+    #             country = config['country'],
+    #             param_group = config['{}_params_dict'.format(config['aligner'])].keys()
+    #         )
+    
+# rule all:  
+#     input:
+#         expand("{out_dir}/alignment_analysis/to_{reference_name}/alignments_plot_{country}.pdf",
+#                 out_dir = config['out_dir'],
+#                 reference_name = config['reference_name'],
+#                 sample_id =  config['reads'].keys(),
+#                 aligner = config['aligner'],
+#                 country = config['country'],
+#                 param_group = config['last_params_dict'].keys(),
+#                 lofreq_param_group = config['lofreq_params_dict'].keys()
+#         )
+
+# rule all:
+#     input:
+#         "{0}".format(config['out_dir'])+"/last_alignments/last_counts_alns",
+#         "{0}".format(config['out_dir'])+"/last_trained_alignments/last_trained_counts_alns",
+#         "{0}".format(config['out_dir'])+"/bowtie2_alignments/bowtie2_counts_alns"
+
+# rule all:
+#     input:
+#         "{0}".format(config['out_dir'])+"/alignments_plot.pdf"
+
+# Rule to generate blast results
+# rule all:
+#     input:
+#         expand("{out_dir}/blast_results/{sample_id}_results.txt",
+#                 out_dir = config['out_dir'],
+#                 sample_id =  config['reads'].keys(),
+#                 aligner = config['aligner'],
+#                 param_group = config['{}_params_dict'.format(config['aligner'])].keys()
+#                )
+
+# rule all:
+#     input:
+#         "{0}".format(config['out_dir'])+"/blast_alignments/done.txt"
+
+# rule all:
+#     input:
+#         expand("{0}".format(config['out_dir'])+"/alignment_analysis/alignments_plot_{country}.pdf", 
+#                 country = config['country']),
+#         expand("{0}".format(config['out_dir'])+"/alignment_analysis/alignments_comparison_{country}.pdf", 
+#                 country = config['country'])
+
+# rule all:
+#     input:
+#         expand("{0}".format(config['out_dir'])+"/last_alignments/to_{reference_name}/last_counts_alns.tsv", 
+#                 country = config['country'],
+#                 reference_name = config['reference_name']
+#                 ),
+
+# rule all:
+#     input:
+#         "{0}".format(config['out_dir'])+"/alignment_analysis/alignments_comparison.png"
+
+# Rule to generate reference to HXB2 mapping
+# rule all:
+#     input:
+#         expand("{0}".format(config['out_dir'])+"/phase_two_subtype_alignments/hxb2_{reference_name}_2.maf",
+#                 out_dir = config['out_dir'],
+#                 reference_name = config['reference_name']
+#                )
+
+# Rule to generate alignment data file
+# rule all:
+#     input:
+#         "{0}".format(config['out_dir'])+"/alignment_analysis/plot_alns.tsv"

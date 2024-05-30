@@ -1,4 +1,4 @@
-name: last
+name: aavf
 channels:
   - conda-forge
   - bioconda
@@ -9,3 +9,8 @@ dependencies:
   - last>=1387
   - samtools>=1.13
   - picard=2.26.11
+  - quasitools>=0.2.0
+  - pip
+  - bedtools
+  - pip:
+    - pyfaidx
