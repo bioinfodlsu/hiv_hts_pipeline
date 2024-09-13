@@ -1,22 +1,3 @@
-# rule align_bowtie2:
-#     input:
-#         reference_flag = "{0}/bowtie2_index/index.done".format(config["out_dir"]),
-#         reads1 = lambda wildcards: config["reads"][wildcards.sample_id][0],
-#         reads2 = lambda wildcards: config["reads"][wildcards.sample_id][1]
-#     output:
-#         "{0}".format(config['out_dir'])+"/bowtie2_alignments/{sample_id}/paramgroup_{param_group}/alns.bam"
-#     threads:
-#         workflow.cores/len(config["reads"])
-#     params:
-#         index_basename = rules.index_bowtie2.params.index_basename,
-#         preset = lambda wildcards: config["bowtie2_params_dict"][wildcards.param_group]["preset"]
-#     conda:
-#        "../envs/bowtie2.yaml"
-#     shell:
-#         #"{0}".format(config['out_dir'])+"/bowtie2_alignments/{sample_id}/paramgroup_{param_group}.sam"
-#         #"{0}".format(config['out_dir'])+"/bowtie2_alignments/{sample_id}/paramgroup_{param_group}.sam | samtools view -bS - > {output}"
-#         "bowtie2 --local --{params.preset} -x {params.index_basename}  -1 {input.reads1} -2 {input.reads2} | samtools view -bS - > {output}"
-
 rule index_bowtie2:
     input:
        reference = config["reference"]
@@ -50,7 +31,8 @@ rule index_bowtie2:
 rule align_bowtie2_SE:
     input:
         reference_flag = "{0}".format(config["out_dir"])+"/bowtie2_index/index.done",
-        query = config["reads"][list(config["reads"].keys())[0]][0]
+        # query = config["reads"][list(config["reads"].keys())[0]][0]
+        query = "{0}".format(config['out_dir'])+"/filtered_reads/{sample_id}/{sample_id}_subsampled.fq"
     output:
         "{0}".format(config['out_dir'])+"/bowtie2_alignments/{country}/{sample_id}_to_{reference_name}/paramgroup_{param_group}/alns.sam"
     threads:
@@ -81,6 +63,3 @@ rule bowtie2_to_bam:
         """
         picard SamFormatConverter I={input} O={output}
         """
-# java -jar picard.jar SamFormatConverter I=input.sam O=output.bam
-# samtools view -bS - > {output}
-# sambamba view -S -f bam - -o {output}
