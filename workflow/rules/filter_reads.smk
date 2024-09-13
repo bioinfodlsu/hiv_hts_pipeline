@@ -34,3 +34,20 @@ rule subsample_seqtk:
         seqtk sample -s {params.seed} {input.trim1} {params.n} > {output.sub1}
         seqtk sample -s {params.seed} {input.trim2} {params.n} > {output.sub2}
         """
+
+rule subsample_seqtk_SE:
+    input:
+        read = lambda wildcards: config["reads"][wildcards.sample_id][0],
+    output:
+        sub = "{0}".format(config['out_dir'])+"/filtered_reads/{sample_id}/{sample_id}_subsampled.fq"
+    params:
+        n = 50000,      # number of reads after subsampling
+        seed = 100      # seed to initialize a pseudorandom number generator
+    threads:
+        workflow.cores/len(config["reads"])
+    conda:
+        "../envs/last.yaml"
+    shell:
+        """
+        seqtk sample -s {params.seed} {input.read} {params.n} > {output.sub}
+        """
