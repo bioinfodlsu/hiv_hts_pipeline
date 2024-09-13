@@ -103,7 +103,7 @@ rule last_db: #Rule for constructing LAST index
 rule last_score_training: #Rule for training score parameters
     input:
         reference_flag = "{0}".format(config["out_dir"])+"/last_index/{sample_id}_index.done",
-        query = config["reads"][list(config["reads"].keys())[0]][0]
+        query = "{0}".format(config['out_dir'])+"/filtered_reads/{sample_id}/{sample_id}_subsampled.fq",
     params:
         last_index_basename="{0}".format(config["out_dir"])+"/last_index/{sample_id}_index",
         last_sample1="{0}".format(config["out_dir"])+"/last_score_sample/{sample_id}_sample_1.sample.fa",
@@ -155,7 +155,6 @@ rule create_dict:
 # rule align_last: #Rule for aligning paired-end reads to a reference genome, with score training
 #     input:
 #         unpack(get_input_align_last),
-#         query = config["reads"][list(config["reads"].keys())[0]][0],
 #         dict = "{0}".format(config["out_dir"])+"/filtered_reads/{sample_id}/{sample_id}.dict",
 #         frag_len_est = "{0}".format(config["out_dir"])+"/last_frag_stat/{sample_id}.frag_len_est"
 #     params:
