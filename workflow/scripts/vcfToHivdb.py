@@ -2,6 +2,7 @@ import os
 import vcf
 #from pysam import VariantFile
 import subprocess
+import datetime
 
 #coordinates of the 3 genes in 1-based coordinates (because VCF is 1-based)
 #protease
@@ -149,14 +150,12 @@ def getMutations_mult(mut,refG):
     return mutList
 
 
-def createHIVDBRequest(prot,rt,integrase, out):
+def createHIVDBRequest(prot,rt,integrase, out, aavf):
     cmd = "sierrapy mutations "
     #cmd = ""
     #protease
     # print("PROT1 ",len(prot))
-    aavffile = out.replace(".json",".aavf")
-    aavf = open(aavffile, 'w')
-    aavf.write("GENE\tREF\tPOS\tALT\n")
+    
     for i in prot:
         # print("PROT: ", i)
         for j in i[2]:
@@ -164,7 +163,13 @@ def createHIVDBRequest(prot,rt,integrase, out):
             mut = "PR:"+i[1]+str(i[0])+j
             #print("SIERRA", mut)
             cmd = cmd + " "+mut
-            aavf.write("PR\t"+i[1]+"\t"+str(i[0])+"\t"+j+"\n")
+            aavf.write("hxb2\t")
+            aavf.write("PR\t"+str(i[0])+"\t"+i[1]+"\t"+j)
+            #TODO: write filter, alt_freq, coverage, and info
+            #filter: filter status; PASS if this position has passed all filters i.e. a call is made at this position. Otherwise, ...
+            #alt_freq: alternate amino acid frequency; frequency of the alternate allele (float, required)
+            #coverage: coverage at that position; number of reads that cover the POS (int, required)
+            aavf.write("\n")
     #RT
     for i in rt:
         #print("PROT: ", i)
@@ -173,7 +178,10 @@ def createHIVDBRequest(prot,rt,integrase, out):
             mut = "RT:"+i[1]+str(i[0])+j
             #print("SIERRA", mut)
             cmd = cmd + " "+mut
-            aavf.write("RT\t"+i[1]+"\t"+str(i[0])+"\t"+j+"\n")
+            aavf.write("hxb2\t")
+            aavf.write("RT\t"+str(i[0])+"\t"+i[1]+"\t"+j)
+            #TODO: write filter, alt_freq, coverage, and info
+            aavf.write("\n")
     #RT
     for i in integrase:
         #print("PROT: ", i)
@@ -182,7 +190,10 @@ def createHIVDBRequest(prot,rt,integrase, out):
             mut = "IN:"+i[1]+str(i[0])+j
             #print("SIERRA", mut)
             cmd = cmd + " "+mut
-            aavf.write("IN\t"+i[1]+"\t"+str(i[0])+"\t"+j+"\n")
+            aavf.write("hxb2\t")
+            aavf.write("IN\t"+str(i[0])+"\t"+i[1]+"\t"+j)
+            #TODO: write filter, alt_freq, coverage, and info
+            aavf.write("\n")
     #protStr
     #cmd = cmd + " -o "+out
     #cmd = 'sierrapy mutations PR:L10I -o output_171.json'
@@ -210,6 +221,21 @@ if __name__ == '__main__':
 
 
     vcf_reader = vcf.Reader(open(args.vcfFile,'r'))
+
+    aavffile = args.outFile.replace(".json",".aavf")
+    aavf = open(aavffile, 'w')
+
+    aavf.write("##fileformat=AAVFv1.0\n")
+    aavf.write("##fileDate="+datetime.datetime.now().strftime("%Y%m%d")+"\n")
+    aavf.write("##source=vcfToHivdb.py\n")
+    # aavf.write("##reference="+vcf_reader.metadata['reference']+"\n")
+    # for info in vcf_reader.infos:
+    #         header_line = vcf_reader.infos[info].header
+    #         aavf.write(header_line + '\n')
+    # for filters in vcf_reader.filters:
+    #         header_line = vcf_reader.filters[filters].header
+    #         aavf.write(header_line + '\n')
+    aavf.write("#CHROM\tGENE\tPOS\tREF\tALT\tFILTER\tALT_FREQ\tCOVERAGE\tINFO\n")
 
     # vcf_reader = VariantFile(snakemake.input[0])
     protease_seq = list(protease_hxb2)
@@ -279,7 +305,7 @@ if __name__ == '__main__':
     int_mut = getMutations_mult(i_seq,integrase_hivdb)
 
     #createHIVDBRequest(protease_mut, rt_mut,int_mut,snakemake.output[0])
-    createHIVDBRequest(protease_mut, rt_mut,int_mut,args.outFile)
+    createHIVDBRequest(protease_mut, rt_mut, int_mut, args.outFile, aavf)
 
 
 
