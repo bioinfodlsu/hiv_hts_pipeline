@@ -1,0 +1,9 @@
+name: gatk4
+channels:
+  - conda-forge
+  - bioconda
+  - defaults
+dependencies:
+  - picard
+  - gatk4
+  - samtools
