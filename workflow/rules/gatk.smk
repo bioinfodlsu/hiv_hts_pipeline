@@ -86,36 +86,55 @@ rule bam_index_gatk:
     shell:
         "samtools index {input} > {output}"
 
-rule variants_gatk:
-    input:
-        reference = config["reference"],
-        bam = "{0}".format(config['out_dir'])+"/{aligner}_alignments/{country}/{sample_id}_to_{reference_name}/paramgroup_{param_group}/alns.split.bam",
-        bai = "{0}".format(config['out_dir'])+"/{aligner}_alignments/{country}/{sample_id}_to_{reference_name}/paramgroup_{param_group}/alns.split.bam.bai",
-    output:
-        vcf = "{0}".format(config['out_dir'])+"/variants/{country}/{sample_id}_to_{reference_name}/paramgroup_{param_group}/variants_{aligner}.vcf"
-    threads:
-        workflow.cores/len(config["reads"])
-    conda:
-        "../envs/gatk.yaml"
-    shell:
-        "gatk HaplotypeCaller -R {input.reference} -I {input.bam} -O {output}"
+# rule variants_gatk:
+#     input:
+#         reference = config["reference"],
+#         bam = "{0}".format(config['out_dir'])+"/{aligner}_alignments/{country}/{sample_id}_to_{reference_name}/paramgroup_{param_group}/alns.split.bam",
+#         bai = "{0}".format(config['out_dir'])+"/{aligner}_alignments/{country}/{sample_id}_to_{reference_name}/paramgroup_{param_group}/alns.split.bam.bai",
+#     output:
+#         vcf = "{0}".format(config['out_dir'])+"/variants/{country}/{sample_id}_to_{reference_name}/paramgroup_{param_group}/variants_{aligner}.vcf"
+#     threads:
+#         workflow.cores/len(config["reads"])
+#     conda:
+#         "../envs/gatk.yaml"
+#     shell:
+#         "gatk HaplotypeCaller -R {input.reference} -I {input.bam} -O {output}"
 
-rule variants_gatk_filtered:
-    input:
-        reference = config["reference"],
-        vcf = "{0}".format(config['out_dir'])+"/variants/{country}/{sample_id}_to_{reference_name}/paramgroup_{param_group}/variants_{aligner}.vcf"
-    output:
-        "{0}".format(config['out_dir'])+"/variants/{country}/{sample_id}_to_{reference_name}/paramgroup_{param_group}/filtered/variants_{aligner}_{lofreq_param_group}.vcf"
-    params:
-        e = lambda wildcards: config["lofreq_params_dict"][wildcards.lofreq_param_group]
-    threads:
-        workflow.cores/len(config["reads"])
-    conda:
-        "../envs/gatk.yaml"
-    shell:
-        """
-        gatk VariantFiltration  -V {input.vcf} \
-        -filter "QUAL < {params.e[QUAL]}" \
-        --filter-name "QUAL{params.e[QUAL]}" \
-        -O {output}
-        """
+# rule variants_gatk_filtered:
+#     input:
+#         reference = config["reference"],
+#         vcf = "{0}".format(config['out_dir'])+"/variants/{country}/{sample_id}_to_{reference_name}/paramgroup_{param_group}/variants_{aligner}.vcf"
+#     output:
+#         "{0}".format(config['out_dir'])+"/variants_filtered/{country}/{sample_id}_to_{reference_name}/paramgroup_{param_group}/variants_{aligner}_{lofreq_param_group}.vcf"
+#     params:
+#         e = lambda wildcards: config["lofreq_params_dict"][wildcards.lofreq_param_group]
+#     threads:
+#         workflow.cores/len(config["reads"])
+#     conda:
+#         "../envs/gatk.yaml"
+#     shell:
+#         # """
+#         # gatk VariantFiltration  -V {input.vcf} \
+#         # -filter "QUAL < {params.e[QUAL]}" \
+#         # --filter-name "QUAL{params.e[QUAL]}" \
+#         # -O {output}
+#         # """
+#         # """
+#         # gatk VariantFiltration  -V {input.vcf} \
+#         # -filter "AF < {params.e[AF]}" \
+#         # --filter-name "AF{params.e[AF]}" \
+#         # -O {output}
+#         # """
+#         """
+#         gatk VariantFiltration  -V {input.vcf} \
+#         -filter "DP < {params.e[DP]}" \
+#         --filter-name "DP{params.e[DP]}" \
+#         -O {output}
+#         """
+#         # """
+#         # gatk SelectVariants \
+#         # -R {input.reference} \
+#         # -V {input.vcf} \
+#         # -select "AF > {params.e[AF]}" \
+#         # -O {output}
+#         # """

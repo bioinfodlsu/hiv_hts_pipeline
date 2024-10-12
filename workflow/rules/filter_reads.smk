@@ -41,7 +41,7 @@ rule subsample_seqtk_SE:
     output:
         sub = "{0}".format(config['out_dir'])+"/filtered_reads/{sample_id}/{sample_id}_subsampled.fq"
     params:
-        n = 50000,      # number of reads after subsampling
+        n = 150000,      # number of reads after subsampling
         seed = 100      # seed to initialize a pseudorandom number generator
     threads:
         workflow.cores/len(config["reads"])

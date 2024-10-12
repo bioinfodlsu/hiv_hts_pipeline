@@ -51,6 +51,7 @@ include: "rules/blast.smk"
 # include: "rules/map_to_hxb2.smk"
 include: "rules/last_SE.smk"
 include: "rules/gatk.smk"
+include: "rules/bcftools.smk"
 
 # Rule to generate drug resistance report
 rule all:
@@ -68,7 +69,7 @@ rule all:
 # LAST TRAINED Rule to generate drug resistance report
 # rule all:
 #      input:
-#          expand("{out_dir}/drug_resistance_report/{country}/{sample_id}_to_{reference_name}/paramgroup_{param_group}/filtered/results_{aligner}_{lofreq_param_group}.txt",
+#          expand("{out_dir}/drug_resistance_report_filtered/{country}/{sample_id}_to_{reference_name}/paramgroup_{param_group}/results_{aligner}_{lofreq_param_group}.txt",
 #                 out_dir = config['out_dir'],
 #                 reference_name = config['reference_name'],
 #                 sample_id =  config['reads'].keys(),
