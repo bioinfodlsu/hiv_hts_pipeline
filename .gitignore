@@ -1,0 +1,8 @@
+
+/.snakemake
+/config/test_configs
+/dump
+/evaluation
+/test_data
+/test_out
+/workflow/scripts/__pycache__
