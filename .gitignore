@@ -19,3 +19,4 @@ test_data/hxb2_gene_annotation.bed
 workflow/Snakefile copy
 *.xml
 evaluation
+/workflow/scripts/__pycache__
