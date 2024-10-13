@@ -71,7 +71,7 @@ def main():
     parser.add_argument("--out", required=True, help="TXT output for rug resistance report")
     args = parser.parse_args()
 
-    with open(args.aavf) as aavf_file, open(args.txt, 'w') as txt_file:
+    with open(args.aavf) as aavf_file, open(args.out, 'w') as txt_file:
         cmd = create_sierra_cmd(aavf_file)
 
         # Run the sierra command
