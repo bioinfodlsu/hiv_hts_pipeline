@@ -4,29 +4,30 @@
 
 # Parse Bowtie2 parameters.
 #TODO Error checks
-bowtie2_params = config["bowtie2_params"]
-bowtie2_params_group_names = bowtie2_params[1:]
-bowtie2_params_header = bowtie2_params[0]
-bowtie2_params_dict = {}
-for param_list in bowtie2_params[1:]:
-    group_name = param_list[0]
-    bowtie2_params_dict[group_name] = dict(zip(bowtie2_params_header,param_list))
+aligner_params = None
+aligner_params_group_names = None
+aligner_params_header = None
+aligner_params_dict = None
 
-config['bowtie2_params_dict'] = bowtie2_params_dict
-#print(config['bowtie2_params_dict'] )
+if config['aligner'] == 'bowtie2':
+    aligner_params = config["bowtie2_params"]
+    aligner_params_group_names = aligner_params[1:]
+    aligner_params_header = aligner_params[0]
+    aligner_params_dict = {}
+    for param_list in aligner_params[1:]:
+        group_name = param_list[0]
+        aligner_params_dict[group_name] = dict(zip(aligner_params_header,param_list))
+    
+else:
+    aligner_params = config["last_params"]
+    aligner_params_group_names = aligner_params[1:]
+    aligner_params_header = aligner_params[0]
+    aligner_params_dict = {}
+    for param_list in aligner_params[1:]:
+        group_name = param_list[0]
+        aligner_params_dict[group_name] = dict(zip(aligner_params_header,param_list))
 
-# Parse LAST parameters.
-#TODO Error checks
-last_params = config["last_params"]
-last_params_group_names = last_params[1:]
-last_params_header = last_params[0]
-last_params_dict = {}
-for param_list in last_params[1:]:
-    group_name = param_list[0]
-    last_params_dict[group_name] = dict(zip(last_params_header,param_list))
-
-config['last_params_dict'] = last_params_dict
-# print(config['last_params_dict'] )
+config['aligner_params_dict'] = aligner_params_dict
 
 lofreq_params = config["lofreq_params"]
 lofreq_params_group_names = lofreq_params[0][1:]
@@ -49,7 +50,6 @@ include: "rules/lofreq.smk"
 include: "rules/hivdb_query.smk"
 include: "rules/blast.smk"
 # include: "rules/map_to_hxb2.smk"
-include: "rules/last_SE.smk"
 include: "rules/gatk.smk"
 include: "rules/bcftools.smk"
 
@@ -62,8 +62,7 @@ rule all:
                 sample_id =  config['reads'].keys(),
                 aligner = config['aligner'],
                 country = config['country'],
-                param_group = config['last_params_dict'].keys(),
-                # param_group = config['{}_params_dict'.format(config['aligner'])].keys(),
+                param_group = config['aligner_params_dict'].keys(),
             )
 
 # LAST TRAINED Rule to generate drug resistance report

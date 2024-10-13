@@ -34,7 +34,7 @@ rule count_last_alns:
                out_dir = config['out_dir'],
                sample_id =  config['reads'].keys(),
                reference_name = config['reference_name'],
-               param_group = config['last_params_dict'].keys(),
+               param_group = config['aligner_params_dict'].keys(),
                country = config['country']
               )
     output:
@@ -50,7 +50,7 @@ rule count_last_trained_alns:
                out_dir = config['out_dir'],
                sample_id =  config['reads'].keys(),
                reference_name = config['reference_name'],
-               param_group = config['last_params_dict'].keys(),
+               param_group = config['aligner_params_dict'].keys(),
                country = config['country']
               )
     output:
@@ -66,7 +66,7 @@ rule count_bowtie2_alns:
                out_dir = config['out_dir'],
                sample_id =  config['reads'].keys(),
                reference_name = config['reference_name'],
-               param_group = config['bowtie2_params_dict'].keys(),
+               param_group = config['aligner_params_dict'].keys(),
                country = config['country']
               )
     output:
