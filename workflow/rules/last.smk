@@ -275,7 +275,7 @@ rule align_last_SE_toSAM: #Rule for aligning paired-end reads to a reference gen
         last_index_basename="{0}".format(config["out_dir"])+"/last_index/{sample_id}_index",
         mean = getMean,
         std = getSTD,
-        fromParamsFile = lambda wildcards: config["last_params_dict"][wildcards.param_group]
+        fromParamsFile = lambda wildcards: config["aligner_params_dict"][wildcards.param_group]
     threads:
         workflow.cores/len(config["reads"])
     output:
