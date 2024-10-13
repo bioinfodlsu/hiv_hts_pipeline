@@ -68,7 +68,7 @@ def create_sierra_cmd(aavf_file):
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--aavf", required=True, help="AAVF input to query")
-    parser.add_argument("--txt", help="TXT output for rug resistance report")
+    parser.add_argument("--out", required=True, help="TXT output for rug resistance report")
     args = parser.parse_args()
 
     with open(args.aavf) as aavf_file, open(args.txt, 'w') as txt_file:

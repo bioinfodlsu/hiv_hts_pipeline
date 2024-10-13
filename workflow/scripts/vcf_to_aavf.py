@@ -143,7 +143,7 @@ def write_mutations(aavf, gene, gene_data, record_infos, ref_prot_seq):
                 min_af_dict = min(filtered_data, key=lambda x: x['AF'])
                 chrom, alt_freq, coverage = min_af_dict['CHROM'], min_af_dict['AF'], min_af_dict['DP']
                 info = f"RC={ref_codon};AC={alt_codon};ACC={coverage};ACF={alt_freq}"
-                aavf.write(f"{chrom}\t{gene}\t{codon_ct}\t{ref_prot_seq[codon_ct-1]}\t{trans}\tPASS\t{alt_freq}\t{coverage}\t{info}\n")
+                aavf.write(f"{chrom}\t{gene}\t{codon_ct}\t{ref_prot_seq[codon_ct-1]}\t{trans}\t.\t{alt_freq}\t{coverage}\t{info}\n")
         codon_ct += 1
 
 def main():
