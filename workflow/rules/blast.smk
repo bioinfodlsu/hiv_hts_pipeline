@@ -25,8 +25,7 @@ rule align_blast:
         evalue = 10e-25,
         outfmt = 6
     threads:
-        workflow.cores
-        # workflow.cores/len(config["reads"])
+        workflow.cores/len(config["reads"])
     conda:
         "../envs/blast.yaml"
     shell:
