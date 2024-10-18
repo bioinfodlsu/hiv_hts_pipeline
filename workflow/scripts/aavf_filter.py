@@ -1,7 +1,8 @@
 import argparse
 import datetime
+import pandas as pd
 
-def copy_headers(aavf_file, out_file):
+def copy_metadata(aavf_file, out_file):
     out_file.write("##fileformat=AAVFv1.0\n")
     out_file.write(f"##fileDate={datetime.datetime.now().strftime('%Y%m%d')}\n")
     out_file.write("##source=aavf_filter.py\n")
@@ -12,7 +13,7 @@ def copy_headers(aavf_file, out_file):
         else:
             break
 
-def add_filter_header(aavf_file, filter_params, out_file):
+def add_filter_metadata(aavf_file, filter_params, out_file):
     out_file.write("##FILTER=<ID=PASS,Description=\"All filters passed\">\n")
     filter_ids = [
         "AF<" + filter_params["max_AF"] if filter_params["max_AF"] else None,
@@ -34,6 +35,23 @@ def add_filter_header(aavf_file, filter_params, out_file):
         out_file.write(f"##FILTER=<ID={filter_ids[3]},Description=\"Coverage greater than {filter_params['min_cov']}\">\n")
 
     return filter_ids
+
+def parse_aavf(aavf_file):
+    # store info into a dataframe
+    # for line in aavf_file:
+    #     if line.startswith("#"):
+    #         continue
+    aavf_headers = ["CHROM", "GENE", "POS", "REF", "ALT", "FILTER", "ALT_FREQ", "COVERAGE", "INFO"]
+    df = pd.read_csv(aavf_file, sep="\t", comment="#", header=None, names=aavf_headers)
+
+    info_df = df['INFO'].str.split(';', expand=True)
+    print(info_df)
+    split_data = info_df.apply(lambda x: x.str.split('=', expand=True))
+    print(split_data)
+    aavf_df = pd.concat([df, pd.DataFrame(info_df.tolist(), index=df.index)], axis=1)
+    aavf_df = aavf_df.drop(columns=['INFO'])
+
+    return aavf_df        
 
 def main():
     parser = argparse.ArgumentParser()
@@ -67,10 +85,13 @@ def main():
     
 
     with open(args.aavf) as aavf_file, open(args.out, 'w') as out_file:
-        copy_headers(aavf_file, out_file)
-        filter_ids = add_filter_header(aavf_file, filter_params, out_file)
+        copy_metadata(aavf_file, out_file)
+        filter_ids = add_filter_metadata(aavf_file, filter_params, out_file)
         
         out_file.write("#CHROM\tGENE\tPOS\tREF\tALT\tFILTER\tALT_FREQ\tCOVERAGE\tINFO\n")
+
+        aavf_data = parse_aavf(aavf_file)
+        print(aavf_data)
 
 if __name__ == "__main__":
     main()
