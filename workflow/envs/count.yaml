@@ -6,7 +6,7 @@ channels:
 dependencies:
   - python=3.10
   - pandas
-  - samtools=1.13
+  - samtools>=1.9
   - matplotlib=3.5
   - ipython=8.2
   - seaborn

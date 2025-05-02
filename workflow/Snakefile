@@ -9,25 +9,31 @@ aligner_params_group_names = None
 aligner_params_header = None
 aligner_params_dict = None
 
-if config['aligner'] == 'bowtie2':
-    aligner_params = config["bowtie2_params"]
-    aligner_params_group_names = aligner_params[1:]
-    aligner_params_header = aligner_params[0]
-    aligner_params_dict = {}
-    for param_list in aligner_params[1:]:
-        group_name = param_list[0]
-        aligner_params_dict[group_name] = dict(zip(aligner_params_header,param_list))
-    
-else:
-    aligner_params = config["last_params"]
-    aligner_params_group_names = aligner_params[1:]
-    aligner_params_header = aligner_params[0]
-    aligner_params_dict = {}
-    for param_list in aligner_params[1:]:
-        group_name = param_list[0]
-        aligner_params_dict[group_name] = dict(zip(aligner_params_header,param_list))
+# Bowtie2 Params
+aligner_params = config["bowtie2_params"]
+aligner_params_group_names = aligner_params[1:]
+aligner_params_header = aligner_params[0]
+aligner_params_dict = {}
+for param_list in aligner_params[1:]:
+    group_name = param_list[0]
+    aligner_params_dict[group_name] = dict(zip(aligner_params_header,param_list))
+config['bowtie_params_dict'] = aligner_params_dict
 
-config['aligner_params_dict'] = aligner_params_dict
+# LAST Params
+aligner_params = config["last_params"]
+aligner_params_group_names = aligner_params[1:]
+aligner_params_header = aligner_params[0]
+aligner_params_dict = {}
+for param_list in aligner_params[1:]:
+    group_name = param_list[0]
+    aligner_params_dict[group_name] = dict(zip(aligner_params_header,param_list))
+config['last_params_dict'] = aligner_params_dict
+
+if config['aligner'] == 'bowtie2':
+    config['aligner_params_dict'] = config['bowtie_params_dict']
+else:
+    config['aligner_params_dict'] = config['last_params_dict']
+
 
 lofreq_params = config["lofreq_params"]
 lofreq_params_group_names = lofreq_params[0][1:]
@@ -65,31 +71,18 @@ rule all:
                 param_group = config['aligner_params_dict'].keys(),
             )
 
-# LAST TRAINED Rule to generate drug resistance report
-# rule all:
-#      input:
-#          expand("{out_dir}/drug_resistance_report_filtered/{country}/{sample_id}_to_{reference_name}/paramgroup_{param_group}/results_{aligner}_{lofreq_param_group}.txt",
+# rule all:               
+#     input:
+#         expand("{out_dir}/alignment_analysis/to_{reference_name}/plot_alns_{country}.tsv",
 #                 out_dir = config['out_dir'],
 #                 reference_name = config['reference_name'],
 #                 sample_id =  config['reads'].keys(),
 #                 aligner = config['aligner'],
 #                 country = config['country'],
-#                 param_group = config['last_params_dict'].keys(),
-#                 # param_group = config['{}_params_dict'.format(config['aligner'])].keys(),
-#                 lofreq_param_group = config['lofreq_params_dict'].keys()
+#                 param_group = config['aligner_params_dict'].keys(),
+#                 last_param_group = config['last_params_dict'].keys(),
+#                 bowtie2_param_group = config['bowtie_params_dict'].keys(),
 #             )
-
-
-# rule all:               
-    # input:
-    #     expand("{out_dir}/alignment_analysis/to_{reference_name}/plot_alns_{country}.tsv",
-    #             out_dir = config['out_dir'],
-    #             reference_name = config['reference_name'],
-    #             sample_id =  config['reads'].keys(),
-    #             aligner = config['aligner'],
-    #             country = config['country'],
-    #             param_group = config['{}_params_dict'.format(config['aligner'])].keys()
-    #         )
     
 # rule all:  
 #     input:
@@ -99,6 +92,6 @@ rule all:
 #                 sample_id =  config['reads'].keys(),
 #                 aligner = config['aligner'],
 #                 country = config['country'],
-#                 param_group = config['last_params_dict'].keys(),
+#                 param_group = config['aligner_params_dict'].keys(),
 #                 lofreq_param_group = config['lofreq_params_dict'].keys()
 #         )
