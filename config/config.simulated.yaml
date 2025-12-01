@@ -1,12 +1,9 @@
-# Sample config file
-
-# For downloading sequences from NCBI
-
 # vg_giraffe, bowtie2, bowtie2_vs, last
 aligner: "bowtie2"
 
+# UPDATE the email to your own email address to download sequences from NCBI
 email:
-  "kim_leejra@dlsu.edu.ph"
+  ""
 
 # List of reference files or NCBI accession numbers (to download from NCBI) to be used
 # as references for linear alignment (if aligner is bowtie2, last)

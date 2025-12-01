@@ -1,3 +1,5 @@
+# Sample config file
+
 # vg_giraffe, bowtie2, bowtie2_vs, last
 aligner: "bowtie2"
 
@@ -13,7 +15,6 @@ reference_list:
 # If use_own_references is true, reference_list will be ignored
 use_own_references: false
 
-
 # To cluster sequences when building pangenome reference
 use_clustered_refs: false
 
@@ -26,12 +27,13 @@ references:
     CRF02_AG:
       "test_data/references/CRF02_AG.fasta"
 
+# UPDATE the batch name to match your dataset
 batch_name:
     "TestBatch"
 
 rename_reads: False
 
-# Reads
+# Reads: UPDATE the sample names and paths to your own read files
 samples:
     sample_1:
         ["test_data/sample_1.fastq.gz", "test_data/sample_2.fastq.gz"]
