@@ -1,27 +1,50 @@
-reference: "test_data/hxb2.fasta"
-reads:
-    my_sample:
-        [test_data/sample_1.fastq.gz, test_data/sample_2.fastq.gz]
+# Sample config file
 
-out_dir:
-    test_out
+# For downloading sequences from NCBI
 
-#################
-## Aligner Configuration
-#################
-# Currently supports 'bowtie2' and 'last'
+# vg_giraffe, bowtie2, bowtie2_vs, last
 aligner: "bowtie2"
 
-# parameters for Bowtie2
-bowtie2_params:
-  [
-   ["param_group_name","preset"],
-   ["1","sensitive-local"]
-  ]
+email:
+  "kim_leejra@dlsu.edu.ph"
 
-# parameters for LAST
-# last_params:
-#   [
-#    ["param_group_name"],
-#    ["1"]
-#   ]
+# List of reference files or NCBI accession numbers (to download from NCBI) to be used
+# as references for linear alignment (if aligner is bowtie2, last)
+reference_list:
+    "test_data/test_references.txt"
+
+# If use_own_references is true, reference_list will be ignored
+use_own_references: false
+
+
+# To cluster sequences when building pangenome reference
+use_clustered_refs: false
+
+# Sequences to be included in the pangenome reference
+references:
+    HXB2:
+      "test_data/references/hxb2.fasta"
+    CRF01_AE:
+      "test_data/references/CRF01_AE.fasta"
+    CRF02_AG:
+      "test_data/references/CRF02_AG.fasta"
+
+batch_name:
+    "TestBatch"
+
+rename_reads: False
+
+# Reads
+samples:
+    sample_1:
+        ["test_data/sample_1.fastq.gz", "test_data/sample_2.fastq.gz"]
+
+out_dir:
+    "test_out"
+
+# LoFreq parameters for variant calling, used for plotting PR-curves over different parameters
+lofreq_params:
+    AF:
+        [0.0025, 0.0035, 0.0045, 0.0055, 0.0065, 0.0075, 0.0085, 0.0095, 0.0100, 0.0500, 0.1000, 0.2000, 0.3000, 0.4000, 0.5000, 0.6000, 0.7000, 0.8000, 0.9000, 1.0000]
+    ACC:
+        [0, 4000, 9000, 13000, 17000, 22000, 26000, 31000, 35000, 39000, 44000]

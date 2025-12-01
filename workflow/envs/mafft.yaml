@@ -1,0 +1,11 @@
+name: mafft_env
+channels:
+  - bioconda
+  - conda-forge
+  - defaults
+channel_priority: strict
+
+dependencies:
+  # - libgcc-ng>=12
+  - mafft            
+  - samtools

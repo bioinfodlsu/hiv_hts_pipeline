@@ -88,7 +88,7 @@ rule vcf_to_aavf_linear:
     shell:
         """
         mkdir -p {params.out_dir} &&
-        python workflow/scripts/vcf_to_aavf.py --vcf {input} --aavf {output} 2> {log}
+        python workflow/scripts/vcf_to_aavf_2.py --vcf {input} --aavf {output} 2> {log}
         """
 
 rule vcf_to_aavf_vg:
@@ -107,7 +107,7 @@ rule vcf_to_aavf_vg:
     shell:
         """
         mkdir -p {params.out_dir} &&
-        python workflow/scripts/vcf_to_aavf.py --vcf {input} --aavf {output} 2> {log}
+        python workflow/scripts/vcf_to_aavf_2.py --vcf {input} --aavf {output} 2> {log}
         """
 
 rule aavf_filtered_linear:

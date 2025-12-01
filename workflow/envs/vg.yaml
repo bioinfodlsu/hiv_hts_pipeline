@@ -1,0 +1,12 @@
+# workflow/envs/vg.yaml
+name: vg_env
+channels:
+  - conda-forge
+  - bioconda
+  - defaults
+channel_priority: strict
+
+dependencies:
+  - python=3.10
+  # - vg # install manually
+  - graphviz

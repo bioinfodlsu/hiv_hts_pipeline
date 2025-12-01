@@ -1,9 +1,0 @@
-channels:
-    - conda-forge
-    - bioconda
-dependencies:
-    - python=2.7
-    - seqtk==1.3
-    - last=1268
-    - samtools=1.13
-    - picard=2.26.11

@@ -1,0 +1,12 @@
+# workflow/envs/bandage.yaml
+name: bandage_env
+channels:
+  - conda-forge
+  - bioconda
+  - defaults
+channel_priority: strict
+
+dependencies:
+  - python=3.10
+  - bandage
+  - graphviz

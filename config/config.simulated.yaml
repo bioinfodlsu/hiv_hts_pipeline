@@ -1,0 +1,125 @@
+# Sample config file
+
+# For downloading sequences from NCBI
+
+# vg_giraffe, bowtie2, bowtie2_vs, last
+aligner: "bowtie2"
+
+email:
+  "kim_leejra@dlsu.edu.ph"
+
+# List of reference files or NCBI accession numbers (to download from NCBI) to be used
+# as references for linear alignment (if aligner is bowtie2, last)
+reference_list:
+    "test_data/test_references.txt"
+
+# If use_own_references is true, reference_list will be ignored
+use_own_references: false
+
+
+# To cluster sequences when building pangenome reference
+use_clustered_refs: false
+
+# Sequences to be included in the pangenome reference
+references:
+    HXB2:
+      "test_data/references/hxb2.fasta"
+    CRF01_AE:
+      "test_data/references/CRF01_AE.fasta"
+    CRF02_AG:
+      "test_data/references/CRF02_AG.fasta"
+
+batch_name:
+    "Simulated"
+
+rename_reads: False
+
+# Reads
+samples:
+    simreads_mr_0.001: 
+        ["test_data/simulated_reads/my_reads/mr_0.001/reads/simreads_R1.fastq"]
+    simreads_mr_0.002: 
+        ["test_data/simulated_reads/my_reads/mr_0.002/reads/simreads_R1.fastq"]
+    simreads_mr_0.003: 
+        ["test_data/simulated_reads/my_reads/mr_0.003/reads/simreads_R1.fastq"]
+    simreads_mr_0.004: 
+        ["test_data/simulated_reads/my_reads/mr_0.004/reads/simreads_R1.fastq"]
+    simreads_mr_0.005: 
+        ["test_data/simulated_reads/my_reads/mr_0.005/reads/simreads_R1.fastq"]
+    simreads_mr_0.006: 
+        ["test_data/simulated_reads/my_reads/mr_0.006/reads/simreads_R1.fastq"]
+    simreads_mr_0.007: 
+        ["test_data/simulated_reads/my_reads/mr_0.007/reads/simreads_R1.fastq"]
+    simreads_mr_0.008: 
+        ["test_data/simulated_reads/my_reads/mr_0.008/reads/simreads_R1.fastq"]
+    simreads_mr_0.009: 
+        ["test_data/simulated_reads/my_reads/mr_0.009/reads/simreads_R1.fastq"]
+    simreads_mr_0.010: 
+        ["test_data/simulated_reads/my_reads/mr_0.010/reads/simreads_R1.fastq"]
+    simreads_mr_0.011: 
+        ["test_data/simulated_reads/my_reads/mr_0.011/reads/simreads_R1.fastq"]
+    simreads_mr_0.012: 
+        ["test_data/simulated_reads/my_reads/mr_0.012/reads/simreads_R1.fastq"]
+    simreads_mr_0.013: 
+        ["test_data/simulated_reads/my_reads/mr_0.013/reads/simreads_R1.fastq"]
+    simreads_mr_0.014: 
+        ["test_data/simulated_reads/my_reads/mr_0.014/reads/simreads_R1.fastq"]
+    simreads_mr_0.015: 
+        ["test_data/simulated_reads/my_reads/mr_0.015/reads/simreads_R1.fastq"]
+    simreads_mr_0.016: 
+        ["test_data/simulated_reads/my_reads/mr_0.016/reads/simreads_R1.fastq"]
+    simreads_mr_0.017: 
+        ["test_data/simulated_reads/my_reads/mr_0.017/reads/simreads_R1.fastq"]
+    simreads_mr_0.018: 
+        ["test_data/simulated_reads/my_reads/mr_0.018/reads/simreads_R1.fastq"]
+    simreads_mr_0.019: 
+        ["test_data/simulated_reads/my_reads/mr_0.019/reads/simreads_R1.fastq"]
+    simreads_mr_0.020: 
+        ["test_data/simulated_reads/my_reads/mr_0.020/reads/simreads_R1.fastq"]
+
+    simreads_mr_0.030: 
+        ["test_data/simulated_reads/my_reads/mr_0.030/reads/simreads_R1.fastq"]
+    simreads_mr_0.040: 
+        ["test_data/simulated_reads/my_reads/mr_0.040/reads/simreads_R1.fastq"]
+    simreads_mr_0.050: 
+        ["test_data/simulated_reads/my_reads/mr_0.050/reads/simreads_R1.fastq"]
+    simreads_mr_0.060: 
+        ["test_data/simulated_reads/my_reads/mr_0.060/reads/simreads_R1.fastq"]
+    simreads_mr_0.070: 
+        ["test_data/simulated_reads/my_reads/mr_0.070/reads/simreads_R1.fastq"]
+    simreads_mr_0.080: 
+        ["test_data/simulated_reads/my_reads/mr_0.080/reads/simreads_R1.fastq"]
+    simreads_mr_0.090: 
+        ["test_data/simulated_reads/my_reads/mr_0.090/reads/simreads_R1.fastq"]
+    simreads_mr_0.100: 
+        ["test_data/simulated_reads/my_reads/mr_0.100/reads/simreads_R1.fastq"]
+    simreads_mr_0.110: 
+        ["test_data/simulated_reads/my_reads/mr_0.110/reads/simreads_R1.fastq"]
+    simreads_mr_0.120: 
+        ["test_data/simulated_reads/my_reads/mr_0.120/reads/simreads_R1.fastq"]
+    simreads_mr_0.130: 
+        ["test_data/simulated_reads/my_reads/mr_0.130/reads/simreads_R1.fastq"]
+    simreads_mr_0.140: 
+        ["test_data/simulated_reads/my_reads/mr_0.140/reads/simreads_R1.fastq"]
+    simreads_mr_0.150: 
+        ["test_data/simulated_reads/my_reads/mr_0.150/reads/simreads_R1.fastq"]
+    simreads_mr_0.160: 
+        ["test_data/simulated_reads/my_reads/mr_0.160/reads/simreads_R1.fastq"]
+    simreads_mr_0.170: 
+        ["test_data/simulated_reads/my_reads/mr_0.170/reads/simreads_R1.fastq"]
+    simreads_mr_0.180: 
+        ["test_data/simulated_reads/my_reads/mr_0.180/reads/simreads_R1.fastq"]
+    simreads_mr_0.190: 
+        ["test_data/simulated_reads/my_reads/mr_0.190/reads/simreads_R1.fastq"]
+    simreads_mr_0.200: 
+        ["test_data/simulated_reads/my_reads/mr_0.200/reads/simreads_R1.fastq"]
+    
+out_dir:
+    "test_out"
+
+# LoFreq parameters for variant calling, used for plotting PR-curves over different parameters
+lofreq_params:
+    AF:
+        [0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]
+    ACC:
+        [0, 60, 120, 180, 240, 300, 360, 420, 480, 540, 600, 660, 720, 780, 840, 900, 960, 1020, 1080, 1140, 1200, 1260, 1320, 1380, 1440, 1500, 1560, 1620, 1680, 1740, 1800, 1860, 1920, 1980, 2040, 2100, 2160, 2220, 2280, 2340, 2400]

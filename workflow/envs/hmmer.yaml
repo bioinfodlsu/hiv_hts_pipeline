@@ -1,0 +1,11 @@
+name: hivmmer_env
+channels: 
+  - biocore
+  - bioconda
+  - conda-forge
+  - defaults
+channel_priority: strict
+
+dependencies:
+  - hmmer
+  - seqkit

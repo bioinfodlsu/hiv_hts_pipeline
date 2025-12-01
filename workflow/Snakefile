@@ -1,46 +1,137 @@
-#Pipeline for DRM calling
-#Here we will read config file which contains information about which tools to use
-#for alignment and variant calling, and write rules to decide will rules in the rules folder to call.
+configfile: "config/config.sample.yaml"
+# configfile: "config/config.simulated.yaml"
 
-# Parse Bowtie2 parameters.
-#TODO Error checks
-bowtie2_params = config["bowtie2_params"]
-bowtie2_params_group_names = bowtie2_params[1:]
-bowtie2_params_header = bowtie2_params[0]
-bowtie2_params_dict = {}
-for param_list in bowtie2_params[1:]:
-    group_name = param_list[0]
-    bowtie2_params_dict[group_name] = dict(zip(bowtie2_params_header,param_list))
+def is_linear():
+    if config["aligner"] in ["bowtie2", "last", "hmmer"]:
+        return True
+    else:
+        return False
 
-config['bowtie2_params_dict'] = bowtie2_params_dict
-#print(config['bowtie2_params_dict'] )
+def is_paired(sample_id):
+    files = config["samples"][sample_id]
+    return isinstance(files, list) and len(files) == 2
 
-# Parse LAST parameters.
-#TODO Error checks
-last_params = config["last_params"]
-last_params_group_names = last_params[1:]
-last_params_header = last_params[0]
-last_params_dict = {}
-for param_list in last_params[1:]:
-    group_name = param_list[0]
-    last_params_dict[group_name] = dict(zip(last_params_header,param_list))
+OUT_DIR = config["out_dir"]
+BATCH_NAME = config["batch_name"]
+SAMPLES = config["samples"]
+# THREADS = config["threads"]
+ALIGNER = config["aligner"]
+EMAIL = ""
+REFERENCE_NAMES = []
+REFERENCES = []
+EMAIL = config["email"]
+PREPROCESS_READS = config["rename_reads"]
 
-config['last_params_dict'] = last_params_dict
+try:
+    LOFREQ_GROUPS = list(config["lofreq_params"].keys())  # ["AF", "ACC"]
+    LOFREQ_VALUES = {k: config["lofreq_params"][k] for k in LOFREQ_GROUPS}
+except KeyError:
+    LOFREQ_GROUPS = []
+    LOFREQ_VALUES = {}
+
+if is_linear():
+    refs = []
+    ref_names = []
+    with open(config['reference_list'], 'r') as f:
+        for line in f:
+            name = line.strip()
+            ref_names.append(name)
+            refs.append(f'test_data/refseqs_cleaned/{name}.fasta')
+    REFERENCES = refs
+    REFERENCE_NAMES = ref_names
+else:
+    REFERENCES = list(config["references"].values())
+    REFERENCE_NAMES = config["references"].keys()
+
+# print(f"OUT_DIR: {OUT_DIR}")
+# print(f"BATCH_NAME: {BATCH_NAME}")
+# print(f"SAMPLES: {SAMPLES}")
+# print(f"REFERENCES: {REFERENCES}")
+# print(f"REFERENCE_NAMES: {REFERENCE_NAMES}")
+# print(f"EMAIL: {EMAIL}")
 
 
-include: "rules/filter_reads.smk"
-include: "rules/bowtie2.smk"
-include: "rules/last.smk"
-include: "rules/bam.smk"
-include: "rules/variant_calling.smk"
-include: "rules/hivdb_query.smk"
 
+###############
+## SNAKEMAKE ##
+###############
+
+include: "rules/download_refseqs.smk"
+include: "rules/mafft.smk"
+include: "rules/pggb.smk"
+include: "rules/vg.smk"
+# include: "rules/variant_calling.smk"
+include: "rules/variant_calling_2.smk"
+include: "rules/conversion.smk"
+include: "rules/visualize.smk"
+include: "rules/odgi.smk"
+include: "rules/simulation.smk"
+
+include: "rules/alignment/alignment_stats.smk"
+include: "rules/alignment/vg_map.smk"
+include: "rules/alignment/vg_giraffe.smk"
+include: "rules/alignment/vg_surject.smk"
+include: "rules/alignment/hmmer.smk"
+include: "rules/alignment/last.smk"
+include: "rules/alignment/bowtie2.smk"
+
+include: "rules/simbench.smk"
 
 rule all:
-     input:
-         expand("{out_dir}/drug_resistance_report/{sample_id}/paramgroup_{param_group}/results_{aligner}.txt",
-                out_dir = config['out_dir'],
-                sample_id =  config['reads'].keys(),
-                aligner = config['aligner'],
-                param_group = config['{}_params_dict'.format(config['aligner'])].keys()
-               )
+    input:
+        # Linear alignment
+        expand(
+            f"{OUT_DIR}/{BATCH_NAME}/{ALIGNER}/{{sample_id}}/variants/alns_to_{{reference_name}}.aavf" ,
+            reference_name=REFERENCE_NAMES,
+            sample_id=SAMPLES.keys(),
+        ) if is_linear() else
+        # VG alignment
+        expand(
+            f"{OUT_DIR}/{BATCH_NAME}/vg/{ALIGNER}/{{sample_id}}/variants/lofreq.aavf",
+            sample_id=SAMPLES.keys()
+        ) + expand(
+            f"{OUT_DIR}/{BATCH_NAME}/vg/{ALIGNER}/{{sample_id}}/variants/vg_call.vcf",   # Variant calling with VG
+            sample_id=SAMPLES.keys()
+        )
+
+################
+## FOR SIMULATING READS WITH DIFFERENT MUTATION RATES
+################
+# rule all:
+#     input:
+#         expand(
+#             f"test_data/simulated_reads/my_reads/{{mutrate}}/variants/simreads_R.aavf",
+#             mutrate=[f"mr_{x:.3f}" for x in [i/100 for i in range(1, 21)]],
+#         )
+
+################
+## FOR BATCH RUNS WITH LOFREQ PARAMS
+################
+# rule all:
+#     input:
+#         expand(
+#             f"{OUT_DIR}/{BATCH_NAME}/{ALIGNER}/{{sample_id}}/variants_filtered/{{lofreq_group}}/alns_to_{{reference_name}}_{{lofreq_value}}.aavf",
+#             sample_id=SAMPLES.keys(),
+#             reference_name=REFERENCE_NAMES,
+#             lofreq_value=[str(v) for v in LOFREQ_VALUES["AF"]],
+#             lofreq_group=["AF"]
+#         ) +
+#         expand(
+#             f"{OUT_DIR}/{BATCH_NAME}/{ALIGNER}/{{sample_id}}/variants_filtered/{{lofreq_group}}/alns_to_{{reference_name}}_{{lofreq_value}}.aavf",
+#             sample_id=SAMPLES.keys(),
+#             reference_name=REFERENCE_NAMES,
+#             lofreq_value=[str(v) for v in LOFREQ_VALUES["ACC"]],
+#             lofreq_group=["ACC"]
+#         ) if is_linear() else
+#         expand(
+#             f"{OUT_DIR}/{BATCH_NAME}/vg/{ALIGNER}/{{sample_id}}/variants_filtered/{{lofreq_group}}/lofreq_{{lofreq_value}}.aavf",
+#             sample_id=SAMPLES.keys(),
+#             lofreq_value=[str(v) for v in LOFREQ_VALUES["AF"]],
+#             lofreq_group=["AF"]
+#         ) +
+#         expand(
+#             f"{OUT_DIR}/{BATCH_NAME}/vg/{ALIGNER}/{{sample_id}}/variants_filtered/{{lofreq_group}}/lofreq_{{lofreq_value}}.aavf",
+#             sample_id=SAMPLES.keys(),
+#             lofreq_value=[str(v) for v in LOFREQ_VALUES["ACC"]],
+#             lofreq_group=["ACC"]
+#         )

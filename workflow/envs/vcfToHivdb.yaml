@@ -1,9 +1,0 @@
-channels:
-    - conda-forge
-    - bioconda
-    - defaults
-dependencies:
-    - python=2.7
-    - sierrapy=0.2.1
-    - tabulate=0.8.9
-    - pyvcf=0.6.8

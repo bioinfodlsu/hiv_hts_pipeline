@@ -6,3 +6,5 @@
 /test_data
 /test_out
 /workflow/scripts/__pycache__
+.DS_Store
+/workflow/notebooks

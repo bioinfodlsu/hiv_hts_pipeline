@@ -1,76 +1,137 @@
-# Introduction
-This is a pipeline for drug-resistance profiling from HIV whole genome NGS data.
-It takes in a HIV reference genome (currently HXB2) and a dataset of reads in (gzipped) fastq format, 
-and performs the following steps: 
+# Pangenome Graph-Based HIV Drug Resistance Profiling Pipeline
 
-1. aligns the reads to the reference, 
-2. performs variant calling, and
-3. queries the HIVDB system for the presence and degree of drug resistance (requires internet connection).
+A Snakemake-based workflow for detecting HIV drug resistance mutations (DRMs) using a pangenome graph reference built from diverse HIV-1 group M genomes. This pipeline leverages the **VG toolkit** and related tools to construct variation graphs, align NGS reads, call variants, and convert results into AAVF format for drug resistance mutation identification and interpretation.
 
-Currently, the pipeline uses [Bowtie2](http://bowtie-bio.sourceforge.net/bowtie2/index.shtml) for Step1, [Lofreq](https://dx.doi.org/10.1093%2Fnar%2Fgks918) for Step 2, and [sierrapy](https://github.com/hivdb/sierra-client/tree/master/python) for Step 3. 
 
-This code is under development. We hope to test and add more options.
+## What This Pipeline Does
 
-# Installation
-This pipeline requires the package manager **Conda** and the workflow management system **Snakemake**.
-All other dependencies are handled automatically by Snakemake.
+This pipeline performs the following key steps:
 
-### Install Conda 
-Download Miniconda3  installer for Linux from [here](https://docs.conda.io/en/latest/miniconda.html#linux-installers), or for macOS from [here](https://docs.conda.io/en/latest/miniconda.html#macos-installers)
-Installation instructions are [here](https://conda.io/projects/conda/en/latest/user-guide/install/linux.html).
-Once installation is complete, you can test your Miniconda installation by running:
-```
-$ conda list
+1. **Input Preparation**
+
+   * Accepts a curated set of HIV reference genomes (FASTA) and NGS reads (FASTQ).
+
+2. **Graph Construction**
+
+   * Performs multiple sequence alignment using `MAFFT`.
+   * Constructs a variation graph using `vg construct`.
+
+3. **Graph Indexing and Read Alignment**
+
+   * Indexes the graph using `vg index`, `vg gbwt`, and related tools.
+   * Aligns reads to the graph using `vg giraffe` or `vg map`.
+
+4. **Variant Calling**
+
+   * Calls variants from graph alignments using `vg call`.
+   * Generates a VCF file per sample.
+
+5. **Drug Resistance Mutation Identification and Interpretation**
+
+   * Converts VCF to AAVF using a custom Python script.
+   * Queries the AAVF file against **HIVdb** using `sierrapy`.
+   * Outputs an HIV drug resistance profile.
+
+7. **Benchmarking and Evaluation**
+
+   * Compares alignment rate, accuracy, variant detection, runtime, and memory usage against a traditional linear-reference pipeline.
+
+
+## Installation
+
+This pipeline requires:
+
+* [Miniconda](https://docs.conda.io/en/latest/miniconda.html)
+* [Snakemake](https://snakemake.readthedocs.io)
+
+All tool-specific dependencies are handled via Snakemake’s `--use-conda` feature.
+
+### Step 1: Install Miniconda
+
+Follow the [official instructions here](https://docs.conda.io/en/latest/miniconda.html) to install Miniconda3 for your platform.
+
+Verify the installation:
+
+```bash
+conda list
 ```
 
-### Install Snakemake
-Snakemake recommends installation via Conda:
-```
-$ conda install -c conda-forge mamba
-$ mamba create -c conda-forge -c bioconda -n snakemake snakemake
-```
-This creates an isolated enviroment containing the latest Snakemake. To activate it:
-```
-$ conda activate snakemake
-```
-To test snakemake installation 
-```
-$ snakemake --help
+### Step 2: Install Snakemake
+
+We recommend using **mamba** for faster environment setup:
+
+```bash
+conda install -c conda-forge mamba
+mamba create -c conda-forge -c bioconda -n \<environment_name\> snakemake
+conda activate \<environment_name\>
 ```
 
-### Download the pipeline
-Clone this pipeline by clicking the Clone button on the top-right of this page,
-or download it by clicking the ellipsis next to the Clone button.
+Test the installation:
 
-# Quickstart Guide
-Let's try running the pipeline on sample data provided in the `test_data` folder.
-With the snakemake conda environment activated, and from the top-level directory (i.e. the one that contains this readme file), run:
+```bash
+snakemake --help
 ```
-snakemake --use-conda --configfile config/config.sample.yaml -np
-```
-to do a dry-run. If snakemake does not complain and everything seems ok, then run:
-```
-snakemake --use-conda --configfile config/config.sample.yaml --cores all
-``` 
-The results can be found inside the newly created directory called `test_result`.
-Interpretation of drug-resistance as provided by sierrapy can be found inside the `drug_resistance_report` folder.
-Intermediate files such as the read-to-reference alignments and variant calls can be found in their respective folders.
 
-# Running the pipeline on your own data
-To the run the pipeline on your own data, you need to specify in a config file (in YAML format) the paths to the input data (reads and reference),
-path to the output directory. 
-Optionally, in this config file, you can also set parameters for the various tools that make up this pipeline. 
-You can use `config/config.template.yaml` as a template.  Once the configfile is ready, run the pipeline like above:
-```
-snakemake --use-conda --configfile /path/to/configfile -np
-```
-for a dry run, and 
-```
-snakemake --use-conda --configfile /path/to/configfile --cores all
-```
-for the actual run.
 
-# Contact
-This is an ongoing work. If you have questions, concerns, issues, or suggestions, please contact: 
-**Anish Shrestha, 
-Bioinformatics Lab, De La Salle University Manila at anish.shrestha@dlsu.edu.ph** .
+## Download the Pipeline
+
+Clone this repository:
+
+```bash
+git clone https://github.com/kimileeee/pangenomics-hiv.git
+cd pangenomics-hiv
+```
+
+
+## Quick Start Guide
+
+### Dry Run
+
+To preview the workflow and see what will run:
+
+```bash
+snakemake --use-conda --cores N -np
+```
+
+Replace `N` with the number of cores you wish to use.
+
+### Run the Pipeline
+
+To execute the pipeline:
+
+```bash
+snakemake --use-conda --cores N -p
+```
+
+### Visualize DAG (Directed Acyclic Graph)
+
+To generate a PDF of the pipeline's rule structure:
+
+```bash
+snakemake --use-conda --cores all --dag | dot -Tpdf > dag.pdf
+```
+
+
+## Running the Pipeline on Your Own Data
+
+### 1. Configure `config/config.yaml`
+
+Edit the `config.yaml` file to set:
+
+* Paths to your **reference FASTA** and **FASTQ** files
+* Output directory
+* Optionally set `linear: true` to run the linear pipeline instead of the graph-based one
+* Optionally set `use_clustered_refs: true` to enable reference clustering before graph construction
+* Graph alignment method (`giraffe` or `map`)
+
+Make sure all paths are correct and that FASTA/FASTQ files are in standard format. You can leave unused samples or references commented out.
+
+
+## Citation & References
+
+
+
+## Contact
+
+For questions, bug reports, or contributions, feel free to [open an issue](https://github.com/kimileeee/pangenomics-hiv/issues).
+

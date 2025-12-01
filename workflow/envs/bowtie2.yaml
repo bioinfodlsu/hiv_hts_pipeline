@@ -1,7 +1,0 @@
-channels:
-    - conda-forge
-    - bioconda
-dependencies:
-    - bowtie2=2.2.5
-    - samtools=1.13
-    - seqtk==1.3

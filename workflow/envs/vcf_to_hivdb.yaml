@@ -1,0 +1,13 @@
+channels:
+    - conda-forge
+    - bioconda
+    - defaults
+dependencies:
+    - python>=2.7
+    - sierrapy>=0.2.1
+    - tabulate>=0.8.9
+    - pyvcf3
+    - pip
+    - pip:
+        - urllib3>=1.26.15
+        - requests-toolbelt>=0.10.1
